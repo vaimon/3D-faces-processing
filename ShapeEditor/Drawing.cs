@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace _3DFacesProcessing
 {
-    public partial class FormCutoff
+    public partial class FormEditShape
     {
         bool isAxisVisible = false;
         bool arePointsVisible = false;

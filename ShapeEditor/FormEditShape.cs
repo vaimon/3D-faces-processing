@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace _3DFacesProcessing
 {
-    public partial class FormCamera : System.Windows.Forms.Form
+    public partial class FormEditShape : System.Windows.Forms.Form
     {
         bool isInteractiveMode = false;
         Func<double, double, double> currentFun;
@@ -25,7 +25,7 @@ namespace _3DFacesProcessing
         public bool isScaleModeWorldCenter = true;
 
 
-        public FormCamera()
+        public FormEditShape()
         {
             InitializeComponent();
             selectShape.SelectedIndex = 0;

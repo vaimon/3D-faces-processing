@@ -19,19 +19,7 @@ namespace _3DFacesProcessing
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var form = new FormCutoff();
-            form.Show();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            var form = new FormZbuffer();
-            form.Show();
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            var form = new FormCamera();
+            var form = new FormEditShape();
             form.Show();
         }
     }
