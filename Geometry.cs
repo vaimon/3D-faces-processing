@@ -99,6 +99,16 @@ namespace _3DFacesProcessing
 
         public Point Start { get => start; set => start = value; }
         public Point End { get => end; set => end = value; }
+
+        public Point getVectorCoordinates()
+        {
+            return new Point(end.Xf - start.Xf, end.Yf - start.Yf, end.Zf - start.Zf);
+        }
+
+        public Point getReverseVectorCoordinates()
+        {
+            return new Point(start.Xf - end.Xf, start.Yf - end.Yf, start.Zf - end.Zf);
+        }
     }
     /// <summary>
     /// Грань фигуры, состоящая из конечного числа отрезков
@@ -106,10 +116,12 @@ namespace _3DFacesProcessing
     public class Face
     {
         List<Line> edges;
+        Point normVector;
 
         public Face()
         {
             edges = new List<Line>();
+            normVector = new Point(0,0,0);
         }
 
         public Face(IEnumerable<Line> edges) : this()
@@ -120,13 +132,23 @@ namespace _3DFacesProcessing
         public Face addEdge(Line edge)
         {
             edges.Add(edge);
+            recalculateNormVector();
             return this;
         }
         public Face addEdges(IEnumerable<Line> edges)
         {
             this.edges.AddRange(edges);
+            recalculateNormVector();
             return this;
         }
+
+        void recalculateNormVector()
+        {
+            Point a = edges.First().getVectorCoordinates(), b = edges.Last().getReverseVectorCoordinates();
+            normVector = new Point(a.Yf * b.Zf - a.Zf * b.Yf, a.Xf * b.Zf - a.Zf * b.Xf, a.Xf * b.Yf - a.Yf * b.Xf);
+        }
+
+        public Point NormVector { get => normVector; }
 
         public List<Line> Edges { get => edges; }
 
