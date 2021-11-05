@@ -53,25 +53,34 @@ namespace _3DFacesProcessing
         /// </summary>
         /// <returns>Точку на экране в вещестаенных координатах</returns>
         public PointF to2D(){
-            if (projection == ProjectionType.PERSPECTIVE)
+            switch (projection)
             {
-                Matrix res = new Matrix(1, 4).fill(Xf, Yf, Zf, 1) * centralMatrix * (1/(k*Zf + 1));
-                return new PointF(worldCenter.X + (float)res[0,0], worldCenter.Y + (float)res[0,1]);
-            }
-            else if (projection == ProjectionType.TRIMETRIC)
-            {
-                Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * trimetricMatrix;
-                return new PointF(worldCenter.X + (float)res[0,0], worldCenter.Y + (float)res[0, 1]);
-            }
-            else if (projection == ProjectionType.DIMETRIC)
-            {
-                Matrix res = new Matrix(1, 4).fill(Xf, Yf, Zf, 1) * dimetricMatrix;
-                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
-            }
-            else
-            {
-                Matrix res = new Matrix(3, 3).fill(1, 0, 0, 0, 1, 0, 0, 0, 0) * isometricMatrix * new Matrix(3, 1).fill(Xf, Yf, Zf);
-                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[1, 0]);
+                case ProjectionType.PERSPECTIVE:
+                    {
+                        Matrix res = new Matrix(1, 4).fill(Xf, Yf, Zf, 1) * centralMatrix * (1 / (k * Zf + 1));
+                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
+                    }
+
+                case ProjectionType.TRIMETRIC:
+                    {
+                        Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * trimetricMatrix;
+                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
+                    }
+
+                case ProjectionType.DIMETRIC:
+                    {
+                        Matrix res = new Matrix(1, 4).fill(Xf, Yf, Zf, 1) * dimetricMatrix;
+                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
+                    }
+
+                case ProjectionType.PARALLEL:
+                    return new PointF(worldCenter.X + (float)Xf, worldCenter.Y + (float)Yf);
+                case ProjectionType.ISOMETRIC:
+                    {
+                        Matrix res = new Matrix(3, 3).fill(1, 0, 0, 0, 1, 0, 0, 0, 0) * isometricMatrix * new Matrix(3, 1).fill(Xf, Yf, Zf);
+                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[1, 0]);
+                    }
+                default: throw new Exception("C# сломался...");
             }
         }
     }
