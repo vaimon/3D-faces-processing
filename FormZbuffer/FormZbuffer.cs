@@ -39,6 +39,7 @@ namespace _3DFacesProcessing
 
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
+            Point.projection = ProjectionType.TRIMETRIC;
             setFlags();
         }
         void setFlags(bool interactiveMode = false)

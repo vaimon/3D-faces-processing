@@ -12,7 +12,7 @@ namespace _3DFacesProcessing
     /// <summary>
     /// Тип проекции на экран
     /// </summary>
-    public enum ProjectionType { ISOMETRIC, PERSPECTIVE, TRIMETRIC, DIMETRIC }
+    public enum ProjectionType { ISOMETRIC, PERSPECTIVE, TRIMETRIC, DIMETRIC, PARALLEL }
     /// <summary>
     /// Точка в пространстве
     /// </summary>
