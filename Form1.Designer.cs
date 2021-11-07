@@ -30,7 +30,7 @@ namespace _3DFacesProcessing
         private void InitializeComponent()
         {
             this.btnEditor = new System.Windows.Forms.Button();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.listBox = new System.Windows.Forms.ListBox();
             this.btnShowAxis = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -41,7 +41,9 @@ namespace _3DFacesProcessing
             this.buttonShift = new System.Windows.Forms.Button();
             this.canvas = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnDelete = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -56,14 +58,15 @@ namespace _3DFacesProcessing
             this.btnEditor.UseVisualStyleBackColor = true;
             this.btnEditor.Click += new System.EventHandler(this.button1_Click);
             // 
-            // listBox1
+            // listBox
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 25;
-            this.listBox1.Location = new System.Drawing.Point(21, 30);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(271, 254);
-            this.listBox1.TabIndex = 1;
+            this.listBox.FormattingEnabled = true;
+            this.listBox.ItemHeight = 25;
+            this.listBox.Location = new System.Drawing.Point(21, 30);
+            this.listBox.Name = "listBox";
+            this.listBox.Size = new System.Drawing.Size(271, 254);
+            this.listBox.TabIndex = 1;
+            this.listBox.SelectedIndexChanged += new System.EventHandler(this.listBox_SelectedIndexChanged);
             // 
             // btnShowAxis
             // 
@@ -74,6 +77,7 @@ namespace _3DFacesProcessing
             this.btnShowAxis.TabIndex = 27;
             this.btnShowAxis.Text = "Показать оси";
             this.btnShowAxis.UseVisualStyleBackColor = true;
+            this.btnShowAxis.Click += new System.EventHandler(this.btnShowAxis_Click);
             // 
             // label6
             // 
@@ -162,8 +166,9 @@ namespace _3DFacesProcessing
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.btnDelete);
             this.groupBox1.Controls.Add(this.btnAdd);
-            this.groupBox1.Controls.Add(this.listBox1);
+            this.groupBox1.Controls.Add(this.listBox);
             this.groupBox1.Controls.Add(this.buttonShift);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.textShiftX);
@@ -178,6 +183,17 @@ namespace _3DFacesProcessing
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Сцена";
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Enabled = false;
+            this.btnDelete.Image = global::_3DFacesProcessing.Properties.Resources.delete;
+            this.btnDelete.Location = new System.Drawing.Point(114, 290);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(50, 38);
+            this.btnDelete.TabIndex = 28;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
             // btnAdd
             // 
             this.btnAdd.Location = new System.Drawing.Point(170, 290);
@@ -186,6 +202,12 @@ namespace _3DFacesProcessing
             this.btnAdd.TabIndex = 27;
             this.btnAdd.Text = "Загрузить...";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.Filter = "Текстовые файлы|*.txt";
+            this.openFileDialog1.InitialDirectory = "C:\\Code\\3DFacesProcessing\\shapes";
             // 
             // Form1
             // 
@@ -208,7 +230,7 @@ namespace _3DFacesProcessing
         #endregion
 
         private System.Windows.Forms.Button btnEditor;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox listBox;
         private System.Windows.Forms.Button btnShowAxis;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label2;
@@ -220,6 +242,8 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.PictureBox canvas;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Button btnDelete;
     }
 }
 

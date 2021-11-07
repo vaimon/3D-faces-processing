@@ -847,7 +847,7 @@ namespace _3DFacesProcessing
             this.btnShowPoints.UseVisualStyleBackColor = true;
             this.btnShowPoints.Click += new System.EventHandler(this.btnShowPoints_Click);
             // 
-            // Form1
+            // FormEditShape
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -888,8 +888,8 @@ namespace _3DFacesProcessing
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximizeBox = false;
-            this.Name = "Form1";
-            this.Text = "Алгем (на максималках)";
+            this.Name = "FormEditShape";
+            this.Text = "Редактор фигур";
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

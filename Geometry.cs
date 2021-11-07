@@ -318,6 +318,11 @@ namespace _3DFacesProcessing
             }
             sw.Close();
         }
+
+        public override string ToString()
+        {
+            return $"{getShapeName()} ({faces.Count})";
+        }
     }
 
     class Tetrahedron : Shape
