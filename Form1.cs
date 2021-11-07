@@ -18,15 +18,10 @@ namespace _3DFacesProcessing
             sceneShapes = new BindingList<Shape>();
             InitializeComponent();
             listBox.DataSource = sceneShapes;
-            g = canvas.CreateGraphics();
-
-            // Здесь мы задаём Декартову систему координат на канвасе
-            g.ScaleTransform(1.0F, -1.0F);
-            g.TranslateTransform(0.0F, -(float)canvas.Height);
-
+            canvas.Image = new Bitmap(canvas.Width, canvas.Height);
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
-            Point.projection = ProjectionType.DIMETRIC;
+            Point.projection = ProjectionType.TRIMETRIC;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -62,6 +57,7 @@ namespace _3DFacesProcessing
             textShiftY.Enabled = isOn;
             textShiftZ.Enabled = isOn;
             buttonShift.Enabled = isOn;
+            btnShowAxis.Enabled = isOn;
         }
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e)

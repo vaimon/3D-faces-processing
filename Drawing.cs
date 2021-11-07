@@ -7,12 +7,14 @@ using System.Threading.Tasks;
 
 namespace _3DFacesProcessing
 {
+    using FastBitmap;
     public partial class Form1
     {
         bool isAxisVisible = false;
-        Graphics g;
+        //Graphics g;
         Pen blackPen = new Pen(Color.Black, 3);
         Pen highlightPen = new Pen(Color.DarkRed, 3);
+        FastBitmap fbitmap;
 
         private void btnShowAxis_Click(object sender, EventArgs e)
         {
@@ -53,7 +55,10 @@ namespace _3DFacesProcessing
         /// <param name="pen">Цвет линии</param>
         void drawLine(Line line, Pen pen)
         {
-            g.DrawLine(pen, line.Start.to2D(), line.End.to2D());
+            var pf1 = line.Start.to2D();
+            var pf2 = line.End.to2D();
+            //g.DrawLine(pen, line.Start.to2D(), line.End.to2D());
+            drawVuLine(new System.Drawing.Point((int)pf1.X, (int)pf1.Y), new System.Drawing.Point((int)pf2.X, (int)pf2.Y), pen.Color);
         }
 
         /// <summary>
@@ -67,13 +72,9 @@ namespace _3DFacesProcessing
             drawLine(axisX, new Pen(Color.Red, 4));
             drawLine(axisY, new Pen(Color.Blue, 4));
             drawLine(axisZ, new Pen(Color.Green, 4));
-            g.ScaleTransform(1.0F, -1.0F);
-            g.TranslateTransform(0.0F, -(float)canvas.Height);
-            g.DrawString($" X", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Red), axisX.End.to2D().X, canvas.Height - axisX.End.to2D().Y);
-            g.DrawString($" Y", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Blue), axisY.End.to2D().X, canvas.Height - axisY.End.to2D().Y);
-            g.DrawString($" Z", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Green), axisZ.End.to2D().X, canvas.Height - axisZ.End.to2D().Y);
-            g.ScaleTransform(1.0F, -1.0F);
-            g.TranslateTransform(0.0F, -(float)canvas.Height);
+            //g.DrawString($" X", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Red), axisX.End.to2D().X, canvas.Height - axisX.End.to2D().Y);
+            //g.DrawString($" Y", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Blue), axisY.End.to2D().X, canvas.Height - axisY.End.to2D().Y);
+            //g.DrawString($" Z", new Font("Arial", 10, FontStyle.Regular), new SolidBrush(Color.Green), axisZ.End.to2D().X, canvas.Height - axisZ.End.to2D().Y);
         }
 
         /// <summary>
@@ -81,14 +82,14 @@ namespace _3DFacesProcessing
         /// </summary>
         void redrawScene()
         {
-            g.Clear(Color.White);
-
+            //g.Clear(Color.White);
+            var bitmap = new Bitmap(canvas.Width,canvas.Height);
+            fbitmap = new FastBitmap(bitmap);
             if (isAxisVisible)
             {
                 drawAxis();
             }
-
-            for(int i = 0; i < sceneShapes.Count; i++)
+            for (int i = 0; i < sceneShapes.Count; i++)
             {
                 if(i == listBox.SelectedIndex)
                 {
@@ -97,6 +98,8 @@ namespace _3DFacesProcessing
                 }
                 drawShape(sceneShapes[i], blackPen);
             }
+            fbitmap.Dispose();
+            canvas.Image = bitmap;         
         }
     }
 }

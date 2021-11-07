@@ -44,8 +44,10 @@ namespace _3DFacesProcessing
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnEditor
@@ -70,7 +72,7 @@ namespace _3DFacesProcessing
             // 
             // btnShowAxis
             // 
-            this.btnShowAxis.Location = new System.Drawing.Point(49, 509);
+            this.btnShowAxis.Location = new System.Drawing.Point(49, 518);
             this.btnShowAxis.Margin = new System.Windows.Forms.Padding(2);
             this.btnShowAxis.Name = "btnShowAxis";
             this.btnShowAxis.Size = new System.Drawing.Size(233, 44);
@@ -209,6 +211,16 @@ namespace _3DFacesProcessing
             this.openFileDialog1.Filter = "Текстовые файлы|*.txt";
             this.openFileDialog1.InitialDirectory = "C:\\Code\\3DFacesProcessing\\shapes";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._cc3333_0008e6_01bc0d_1920_1080;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(46, 515);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(239, 50);
+            this.pictureBox1.TabIndex = 29;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -218,11 +230,13 @@ namespace _3DFacesProcessing
             this.Controls.Add(this.btnShowAxis);
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.btnEditor);
+            this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Просмотр сцены";
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -244,6 +258,7 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
