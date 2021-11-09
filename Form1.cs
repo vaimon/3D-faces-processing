@@ -24,7 +24,7 @@ namespace _3DFacesProcessing
             camera = new Camera(new Point(200, 0, 0));
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
-            Point.projection = ProjectionType.TRIMETRIC;
+            Point.projection = ProjectionType.PARALLEL;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -94,7 +94,7 @@ namespace _3DFacesProcessing
             if (isMoving)
             {
                 camera.changeViewAngle((e.Y - previousLocation.Y) / 10.0, (e.X - previousLocation.X) / -10.0);
-                label3.Text = $"{camera.Vector} => {Math.Round(camera.currentAngleAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
+                //label3.Text = $"{camera.Vector} => {Math.Round(camera.currentAngleAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
                 previousLocation = e.Location;
                 redrawScene();
             }

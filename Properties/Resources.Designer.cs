@@ -63,6 +63,26 @@ namespace _3DFacesProcessing.Properties {
         /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _1000_F_106142795_ne3izxiVn0Y43MEeQRJ01mxx0Eb1ymgc {
+            get {
+                object obj = ResourceManager.GetObject("1000_F_106142795_ne3izxiVn0Y43MEeQRJ01mxx0Eb1ymgc", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _4056768 {
+            get {
+                object obj = ResourceManager.GetObject("4056768", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _cc3333_0008e6_01bc0d_1920_1080 {
             get {
                 object obj = ResourceManager.GetObject("#cc3333#0008e6#01bc0d_1920_1080", resourceCulture);
