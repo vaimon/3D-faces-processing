@@ -55,10 +55,14 @@ namespace _3DFacesProcessing
         /// <param name="pen">Цвет линии</param>
         void drawLine(Line line, Pen pen)
         {
-            var pf1 = line.Start.to2D();
-            var pf2 = line.End.to2D();
+            var pf1 = line.Start.to2D(camera);
+            var pf2 = line.End.to2D(camera);
+            if(!pf1.HasValue || !pf2.HasValue)
+            {
+                return;
+            }
             //g.DrawLine(pen, line.Start.to2D(), line.End.to2D());
-            drawVuLine(new System.Drawing.Point((int)pf1.X, (int)(canvas.Height - pf1.Y)), new System.Drawing.Point((int)pf2.X, (int)(canvas.Height - pf2.Y)), pen.Color);
+            drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(canvas.Height - pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(canvas.Height - pf2.Value.Y)), pen.Color);
         }
 
         /// <summary>
@@ -98,8 +102,9 @@ namespace _3DFacesProcessing
                 }
                 drawShape(sceneShapes[i], blackPen);
             }
-            Line l = new Line(camera.location, camera.LVector);
-            drawLine(l,highlightPen);
+            //var cam = PolarCoords.carthesianToPolar(camera.location);
+            //Line l = new Line(PolarCoords.polarToCarthesian(cam.polarAngle,cam.alphaAngle,cam.r + 5), camera.LVector);
+            //drawLine(l,highlightPen);
             fbitmap.Dispose();
             canvas.Image = bitmap;         
         }
@@ -113,21 +118,21 @@ namespace _3DFacesProcessing
         public double currentAngleAlpha;
 
         public Point Vector { get { return vectorOfView; } }
-        public Point LVector { get { return new Point(location.X + vectorOfView.X, location.Y + vectorOfView.Y, location.Z + vectorOfView.Z); } }
+        public Point LVector { get { return new Point(location.X + 100*vectorOfView.X, location.Y + 100 * vectorOfView.Y, location.Z + 100 * vectorOfView.Z); } }
 
         public Camera(Point location)
         {
             this.location = location;
-            currentAnglePolar = -90;
+            currentAnglePolar = 0;
             currentAngleAlpha = 0;
-            vectorOfView = PolarCoords.polarToCartesian(currentAnglePolar, currentAngleAlpha);
+            vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAngleAlpha);
         }
 
         public void changeViewAngle(double shiftPolarAngle, double shiftAlphaAngle)
         {
             currentAnglePolar = (currentAnglePolar + shiftPolarAngle) % 360;
             currentAngleAlpha = (currentAngleAlpha + shiftAlphaAngle) % 360;
-            vectorOfView = PolarCoords.polarToCartesian(currentAnglePolar, currentAngleAlpha);
+            vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAngleAlpha);
         }
 
         public void move(int shiftX = 0, int shiftY = 0, int shiftZ = 0)

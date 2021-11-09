@@ -72,6 +72,10 @@ namespace FastBitmap
 
         public void SetPixel(Point point, Color color)
         {
+            if(point.X >= Width || point.X <= 0 || point.Y >= Height || point.Y <= 0)
+            {
+                return;
+            }
             var data = PixelOffset(point);
             data[Channel.A] = color.A;
             data[Channel.R] = color.R;

@@ -112,11 +112,44 @@ namespace _3DFacesProcessing
 
     }
 
-    public static class PolarCoords
+    public class PolarCoords
     {
-        public static Point polarToCartesian(double polarAngle, double alphaAngle)
+        public double r;
+        public double polarAngle;
+        public double alphaAngle;
+
+        public PolarCoords(double r, double polarAngle, double alphaAngle)
         {
-            return new Point(100* Geometry.Sin(polarAngle) * Geometry.Cos(alphaAngle), 100 * Geometry.Sin(polarAngle) * Geometry.Sin(alphaAngle), 100 * Geometry.Cos(polarAngle));
+            this.r = r;
+            this.polarAngle = polarAngle;
+            this.alphaAngle = alphaAngle;
+        }
+
+        public PolarCoords()
+        {
+        }
+
+        public static Point polarToCarthesian (double polarAngle, double alphaAngle, double r = 1)
+        {
+            return new Point(r * Geometry.Sin(polarAngle) * Geometry.Cos(alphaAngle), r * Geometry.Sin(polarAngle) * Geometry.Sin(alphaAngle), r * Geometry.Cos(polarAngle));
+        }
+
+        public static PolarCoords carthesianToPolar (Point p)
+        {
+            PolarCoords res = new PolarCoords();
+            res.r = Math.Sqrt(Math.Pow(p.Xf, 2) + Math.Pow(p.Yf, 2) + Math.Pow(p.Zf, 2));
+            res.polarAngle = Geometry.radiansToDegrees(Math.Atan(Math.Sqrt(Math.Pow(p.Xf, 2) + Math.Pow(p.Yf, 2))/p.Zf));
+            double atan;
+            if(p.X == 0)
+            {
+                atan = Math.Atan(double.NegativeInfinity);
+            }
+            else
+            {
+                atan = Math.Atan(p.Yf / p.Xf);
+            }
+            res.alphaAngle = Geometry.radiansToDegrees(atan + (p.X >0 ? 0 : Math.PI));
+            return res;
         }
 
 

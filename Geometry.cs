@@ -21,16 +21,29 @@ namespace _3DFacesProcessing
         double x, y, z;
         public static ProjectionType projection = ProjectionType.TRIMETRIC;
         public static PointF worldCenter;
+        static Size screenSize;
+        static double zScreenNear, zScreenFar, fov;
         static Matrix isometricMatrix = new Matrix(3,3).fill(Math.Sqrt(3),0,-Math.Sqrt(3),1,2,1, Math.Sqrt(2),-Math.Sqrt(2), Math.Sqrt(2)) * (1/ Math.Sqrt(6));
         static Matrix trimetricMatrix = new Matrix(4, 4).fill(Math.Sqrt(3)/2, Math.Sqrt(2)/4, 0, 1, 0, Math.Sqrt(2)/2, 0, 1, 0.5,-Math.Sqrt(6)/4,0,0,0,0,0,1);
         static Matrix dimetricMatrix = new Matrix(4, 4).fill(0.926, 0.134, 0, 0, 0, 0.935, 0, 0, 0.378, -0.327, 0, 0, 0, 0, 0, 1);
         static Matrix centralMatrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, k, 0, 0, 0, 1);
+        static Matrix parallelProjectionMatrix, perspectiveProjectionMatrix;
         const double k = 0.001f;
         public Point(int x, int y, int z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
+        }
+
+        public static void setProjection(Size screenSize, double zScreenNear, double zScreenFar, double fov)
+        {
+            Point.screenSize = screenSize;
+            Point.zScreenNear = zScreenNear;
+            Point.zScreenFar = zScreenFar;
+            Point.fov = fov;
+            parallelProjectionMatrix = new Matrix(4, 4).fill(1.0 / screenSize.Width, 0, 0, 0, 0, 1.0 / screenSize.Height, 0, 0, 0, 0, -2.0 / (zScreenFar - zScreenNear), -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), 0, 0, 0, 1);
+            perspectiveProjectionMatrix = new Matrix(4,4).fill(Math.Atan(Geometry.degreesToRadians(fov / 2)), 0, 0, 0, 0, Math.Atan(Geometry.degreesToRadians(fov/2)), 0, 0, 0, 0, -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), 2 * (zScreenFar * zScreenNear) / (zScreenFar - zScreenNear), 0, 0, -1, 0);
         }
 
         public Point(double x, double y, double z)
@@ -81,6 +94,38 @@ namespace _3DFacesProcessing
                         return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[1, 0]);
                     }
                 default: throw new Exception("C# сломался...");
+            }
+        }
+
+        public PointF? to2D(Camera cam)
+        {
+            Matrix viewMatrix = (new Matrix(4, 4).fill(1, 0, 0, -cam.location.X, 0, 1, 0, -cam.location.Y, 0, 0, 1, -cam.location.Z, 0, 0, 0, 1));
+            var viewCords = viewMatrix * new Matrix(4, 1).fill(Xf, Yf, Zf, 1);
+            //var normalizedPoint = new Point(viewCords[0, 0], viewCords[1, 0], viewCords[2, 0]);
+            var polarPoint = PolarCoords.carthesianToPolar(new Point(viewCords[0, 0], viewCords[1, 0], viewCords[2, 0]));
+            var normalizedPoint = PolarCoords.polarToCarthesian(polarPoint.polarAngle - cam.currentAnglePolar, polarPoint.alphaAngle - cam.currentAngleAlpha, polarPoint.r);
+
+            if (projection == ProjectionType.PARALLEL) {
+                Matrix res = new Matrix(1, 4).fill(normalizedPoint.Xf, normalizedPoint.Yf, normalizedPoint.Zf, 1) * parallelProjectionMatrix;
+                var scaledX = screenSize.Width * (float)res[0, 0] / (float)res[0, 3];
+                var scaledY = screenSize.Height * (float)res[0, 1] / (float)res[0, 3];
+                return new PointF(worldCenter.X + scaledX, worldCenter.Y + scaledY);
+                //return new PointF((float)res[0, 0], (float)res[0, 1]);
+            } else if (projection == ProjectionType.PERSPECTIVE)
+            {
+                Matrix res = new Matrix(1, 4).fill(normalizedPoint.Xf, normalizedPoint.Yf, normalizedPoint.Zf, 1) * perspectiveProjectionMatrix;
+                var scaledX = screenSize.Width * (float)res[0, 0] / (float)res[0, 3];
+                var scaledY = screenSize.Height * (float)res[0, 1] / (float)res[0, 3];
+                if(res[0,2] < 0)
+                {
+                    return null;
+                }
+                return new PointF(worldCenter.X + scaledX, worldCenter.Y + scaledY);
+                //return new PointF((float)res[0, 0], (float)res[0, 1]);
+            }
+            else
+            {
+                throw new Exception("Invalid projection type using camera");
             }
         }
         public override string ToString()
@@ -458,6 +503,11 @@ namespace _3DFacesProcessing
         public static double degreesToRadians(double angle)
         {
             return Math.PI * angle / 180.0;
+        }
+
+        public static double radiansToDegrees(double angle)
+        {
+            return angle * 180 / Math.PI;
         }
 
         /// <summary>

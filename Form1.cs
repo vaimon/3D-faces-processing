@@ -21,10 +21,11 @@ namespace _3DFacesProcessing
             InitializeComponent();
             listBox.DataSource = sceneShapes;
             canvas.Image = new Bitmap(canvas.Width, canvas.Height);
-            camera = new Camera(new Point(200, 0, 0));
+            camera = new Camera(new Point(0, 0, -200));
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
             Point.projection = ProjectionType.PARALLEL;
+            Point.setProjection(canvas.Size, 1, 10, 90);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -94,7 +95,7 @@ namespace _3DFacesProcessing
             if (isMoving)
             {
                 camera.changeViewAngle((e.Y - previousLocation.Y) / 10.0, (e.X - previousLocation.X) / -10.0);
-                //label3.Text = $"{camera.Vector} => {Math.Round(camera.currentAngleAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
+                label5.Text = $"{camera.Vector} => {Math.Round(camera.currentAngleAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
                 previousLocation = e.Location;
                 redrawScene();
             }
@@ -120,8 +121,10 @@ namespace _3DFacesProcessing
                 case 'd': camera.move(shiftX: 5); break;
                 case 'q': camera.move(shiftZ: 5); break;
                 case 'e': camera.move(shiftZ: -5); break;
+                default: return;
             }
             redrawScene();
+            label7.Text = $"{camera.location}";
             e.Handled = true;
         }
     }

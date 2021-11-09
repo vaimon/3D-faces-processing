@@ -49,9 +49,11 @@ namespace _3DFacesProcessing
             this.rbParallel = new System.Windows.Forms.RadioButton();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -294,15 +296,14 @@ namespace _3DFacesProcessing
             this.panel1.Size = new System.Drawing.Size(335, 163);
             this.panel1.TabIndex = 32;
             // 
-            // pictureBox3
+            // label4
             // 
-            this.pictureBox3.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._4056768;
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(15, 62);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(79, 69);
-            this.pictureBox3.TabIndex = 32;
-            this.pictureBox3.TabStop = false;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(21, 8);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(66, 25);
+            this.label4.TabIndex = 33;
+            this.label4.Text = "Обзор";
             // 
             // label3
             // 
@@ -313,20 +314,41 @@ namespace _3DFacesProcessing
             this.label3.TabIndex = 33;
             this.label3.Text = "Положение камеры";
             // 
-            // label4
+            // pictureBox3
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 8);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 25);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "Обзор";
+            this.pictureBox3.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._4056768;
+            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pictureBox3.Location = new System.Drawing.Point(15, 62);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(79, 69);
+            this.pictureBox3.TabIndex = 32;
+            this.pictureBox3.TabStop = false;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(485, 27);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(59, 25);
+            this.label5.TabIndex = 33;
+            this.label5.Text = "label5";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(473, 90);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(59, 25);
+            this.label7.TabIndex = 33;
+            this.label7.Text = "label5";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1678, 944);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.rbParallel);
             this.Controls.Add(this.rbPerspective);
@@ -377,6 +399,8 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label7;
     }
 }
 
