@@ -111,4 +111,14 @@ namespace _3DFacesProcessing
         }
 
     }
+
+    public static class PolarCoords
+    {
+        public static Point polarToCartesian(double polarAngle, double alphaAngle)
+        {
+            return new Point(100* Geometry.Sin(polarAngle) * Geometry.Cos(alphaAngle), 100 * Geometry.Sin(polarAngle) * Geometry.Sin(alphaAngle), 100 * Geometry.Cos(polarAngle));
+        }
+
+
+    }
 }

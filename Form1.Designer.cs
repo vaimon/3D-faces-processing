@@ -45,6 +45,9 @@ namespace _3DFacesProcessing
             this.btnAdd = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.rbPerspective = new System.Windows.Forms.RadioButton();
+            this.rbParallel = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -56,6 +59,7 @@ namespace _3DFacesProcessing
             this.btnEditor.Name = "btnEditor";
             this.btnEditor.Size = new System.Drawing.Size(233, 55);
             this.btnEditor.TabIndex = 0;
+            this.btnEditor.TabStop = false;
             this.btnEditor.Text = "Редактор фигур";
             this.btnEditor.UseVisualStyleBackColor = true;
             this.btnEditor.Click += new System.EventHandler(this.button1_Click);
@@ -68,15 +72,17 @@ namespace _3DFacesProcessing
             this.listBox.Name = "listBox";
             this.listBox.Size = new System.Drawing.Size(271, 254);
             this.listBox.TabIndex = 1;
+            this.listBox.TabStop = false;
             this.listBox.SelectedIndexChanged += new System.EventHandler(this.listBox_SelectedIndexChanged);
             // 
             // btnShowAxis
             // 
-            this.btnShowAxis.Location = new System.Drawing.Point(49, 518);
+            this.btnShowAxis.Location = new System.Drawing.Point(49, 583);
             this.btnShowAxis.Margin = new System.Windows.Forms.Padding(2);
             this.btnShowAxis.Name = "btnShowAxis";
             this.btnShowAxis.Size = new System.Drawing.Size(233, 44);
             this.btnShowAxis.TabIndex = 27;
+            this.btnShowAxis.TabStop = false;
             this.btnShowAxis.Text = "Показать оси";
             this.btnShowAxis.UseVisualStyleBackColor = true;
             this.btnShowAxis.Click += new System.EventHandler(this.btnShowAxis_Click);
@@ -120,6 +126,7 @@ namespace _3DFacesProcessing
             this.textShiftZ.Name = "textShiftZ";
             this.textShiftZ.Size = new System.Drawing.Size(50, 31);
             this.textShiftZ.TabIndex = 21;
+            this.textShiftZ.TabStop = false;
             this.textShiftZ.Text = "0";
             // 
             // textShiftY
@@ -131,6 +138,7 @@ namespace _3DFacesProcessing
             this.textShiftY.Name = "textShiftY";
             this.textShiftY.Size = new System.Drawing.Size(50, 31);
             this.textShiftY.TabIndex = 22;
+            this.textShiftY.TabStop = false;
             this.textShiftY.Text = "0";
             // 
             // textShiftX
@@ -142,6 +150,7 @@ namespace _3DFacesProcessing
             this.textShiftX.Name = "textShiftX";
             this.textShiftX.Size = new System.Drawing.Size(50, 31);
             this.textShiftX.TabIndex = 23;
+            this.textShiftX.TabStop = false;
             this.textShiftX.Text = "0";
             // 
             // buttonShift
@@ -152,8 +161,10 @@ namespace _3DFacesProcessing
             this.buttonShift.Name = "buttonShift";
             this.buttonShift.Size = new System.Drawing.Size(201, 44);
             this.buttonShift.TabIndex = 20;
+            this.buttonShift.TabStop = false;
             this.buttonShift.Text = "Сместить";
             this.buttonShift.UseVisualStyleBackColor = true;
+            this.buttonShift.Click += new System.EventHandler(this.buttonShift_Click);
             // 
             // canvas
             // 
@@ -165,6 +176,9 @@ namespace _3DFacesProcessing
             this.canvas.Size = new System.Drawing.Size(1344, 944);
             this.canvas.TabIndex = 19;
             this.canvas.TabStop = false;
+            this.canvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseDown);
+            this.canvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseMove);
+            this.canvas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.canvas_MouseUp);
             // 
             // groupBox1
             // 
@@ -193,6 +207,7 @@ namespace _3DFacesProcessing
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(50, 38);
             this.btnDelete.TabIndex = 28;
+            this.btnDelete.TabStop = false;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
@@ -202,6 +217,7 @@ namespace _3DFacesProcessing
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(122, 38);
             this.btnAdd.TabIndex = 27;
+            this.btnAdd.TabStop = false;
             this.btnAdd.Text = "Загрузить...";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
@@ -215,29 +231,73 @@ namespace _3DFacesProcessing
             // 
             this.pictureBox1.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._cc3333_0008e6_01bc0d_1920_1080;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(46, 515);
+            this.pictureBox1.Location = new System.Drawing.Point(46, 580);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(239, 50);
             this.pictureBox1.TabIndex = 29;
             this.pictureBox1.TabStop = false;
+            // 
+            // rbPerspective
+            // 
+            this.rbPerspective.AutoSize = true;
+            this.rbPerspective.BackColor = System.Drawing.SystemColors.Control;
+            this.rbPerspective.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.rbPerspective.Checked = true;
+            this.rbPerspective.Location = new System.Drawing.Point(45, 503);
+            this.rbPerspective.Margin = new System.Windows.Forms.Padding(2);
+            this.rbPerspective.Name = "rbPerspective";
+            this.rbPerspective.Size = new System.Drawing.Size(246, 29);
+            this.rbPerspective.TabIndex = 30;
+            this.rbPerspective.TabStop = true;
+            this.rbPerspective.Text = "Перспективная проекция";
+            this.rbPerspective.UseVisualStyleBackColor = false;
+            // 
+            // rbParallel
+            // 
+            this.rbParallel.AutoSize = true;
+            this.rbParallel.BackColor = System.Drawing.SystemColors.Control;
+            this.rbParallel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.rbParallel.Location = new System.Drawing.Point(45, 536);
+            this.rbParallel.Margin = new System.Windows.Forms.Padding(2);
+            this.rbParallel.Name = "rbParallel";
+            this.rbParallel.Size = new System.Drawing.Size(237, 29);
+            this.rbParallel.TabIndex = 30;
+            this.rbParallel.Text = "Параллельная проекция";
+            this.rbParallel.UseVisualStyleBackColor = false;
+            this.rbParallel.CheckedChanged += new System.EventHandler(this.rbParallel_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(468, 42);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(59, 25);
+            this.label3.TabIndex = 31;
+            this.label3.Text = "label3";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1678, 944);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.rbParallel);
+            this.Controls.Add(this.rbPerspective);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnShowAxis);
             this.Controls.Add(this.canvas);
             this.Controls.Add(this.btnEditor);
             this.Controls.Add(this.pictureBox1);
+            this.KeyPreview = true;
             this.Name = "Form1";
             this.Text = "Просмотр сцены";
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Form1_KeyPress);
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -259,6 +319,9 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.RadioButton rbPerspective;
+        private System.Windows.Forms.RadioButton rbParallel;
+        private System.Windows.Forms.Label label3;
     }
 }
 

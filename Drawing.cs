@@ -58,7 +58,7 @@ namespace _3DFacesProcessing
             var pf1 = line.Start.to2D();
             var pf2 = line.End.to2D();
             //g.DrawLine(pen, line.Start.to2D(), line.End.to2D());
-            drawVuLine(new System.Drawing.Point((int)pf1.X, (int)pf1.Y), new System.Drawing.Point((int)pf2.X, (int)pf2.Y), pen.Color);
+            drawVuLine(new System.Drawing.Point((int)pf1.X, (int)(canvas.Height - pf1.Y)), new System.Drawing.Point((int)pf2.X, (int)(canvas.Height - pf2.Y)), pen.Color);
         }
 
         /// <summary>
@@ -98,8 +98,43 @@ namespace _3DFacesProcessing
                 }
                 drawShape(sceneShapes[i], blackPen);
             }
+            Line l = new Line(camera.location, camera.LVector);
+            drawLine(l,highlightPen);
             fbitmap.Dispose();
             canvas.Image = bitmap;         
+        }
+    }
+
+    public class Camera
+    {
+        public Point location;
+        Point vectorOfView;
+        public double currentAnglePolar;
+        public double currentAngleAlpha;
+
+        public Point Vector { get { return vectorOfView; } }
+        public Point LVector { get { return new Point(location.X + vectorOfView.X, location.Y + vectorOfView.Y, location.Z + vectorOfView.Z); } }
+
+        public Camera(Point location)
+        {
+            this.location = location;
+            currentAnglePolar = -90;
+            currentAngleAlpha = 0;
+            vectorOfView = PolarCoords.polarToCartesian(currentAnglePolar, currentAngleAlpha);
+        }
+
+        public void changeViewAngle(double shiftPolarAngle, double shiftAlphaAngle)
+        {
+            currentAnglePolar = (currentAnglePolar + shiftPolarAngle) % 360;
+            currentAngleAlpha = (currentAngleAlpha + shiftAlphaAngle) % 360;
+            vectorOfView = PolarCoords.polarToCartesian(currentAnglePolar, currentAngleAlpha);
+        }
+
+        public void move(int shiftX = 0, int shiftY = 0, int shiftZ = 0)
+        {
+            location.Xf += shiftX;
+            location.Yf += shiftY;
+            location.Zf += shiftZ;
         }
     }
 }

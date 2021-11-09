@@ -83,6 +83,10 @@ namespace _3DFacesProcessing
                 default: throw new Exception("C# сломался...");
             }
         }
+        public override string ToString()
+        {
+            return $"({X}, {Y}, {Z})";
+        }
     }
     /// <summary>
     /// Отрезок в пространстве
@@ -461,18 +465,18 @@ namespace _3DFacesProcessing
         /// </summary>
         /// <param name="angle">Угол в градусах</param>
         /// <returns></returns>
-        public static double Cos (int angle)
+        public static double Cos (double angle)
         {
-            return Math.Round(Math.Cos(degreesToRadians(angle)), 5);
+            return Math.Cos(degreesToRadians(angle));
         }
         /// <summary>
         /// Синус из угла в градусах, ограниченный 5 знаками после запятой
         /// </summary>
         /// <param name="angle">Угол в градусах</param>
         /// <returns></returns>
-        public static double Sin(int angle)
+        public static double Sin(double angle)
         {
-            return Math.Round(Math.Sin(degreesToRadians(angle)), 5);
+            return Math.Sin(degreesToRadians(angle));
         }
         /// <summary>
         /// Перевод точки в другую точку
