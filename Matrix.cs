@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace _3DFacesProcessing
 {
-    class Matrix
+    public class Matrix
     {
         double[,] matr;
         int rowCount;

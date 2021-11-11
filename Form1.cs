@@ -21,11 +21,11 @@ namespace _3DFacesProcessing
             InitializeComponent();
             listBox.DataSource = sceneShapes;
             canvas.Image = new Bitmap(canvas.Width, canvas.Height);
-            camera = new Camera(new Point(0, 0, -200));
+            camera = new Camera();
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
             Point.projection = ProjectionType.PARALLEL;
-            Point.setProjection(canvas.Size, 1, 10, 90);
+            Point.setProjection(canvas.Size, 0.1, 100, 90);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -94,8 +94,8 @@ namespace _3DFacesProcessing
         {
             if (isMoving)
             {
-                camera.changeViewAngle((e.Y - previousLocation.Y) / 10.0, (e.X - previousLocation.X) / -10.0);
-                label5.Text = $"{camera.Vector} => {Math.Round(camera.currentAngleAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
+                camera.changeViewAngle((previousLocation.Y - e.Y) / 10.0, (e.X - previousLocation.X) / 10.0);
+                //label5.Text = $"{camera.} => {Math.Round(camera.currentAzimuthalAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
                 previousLocation = e.Location;
                 redrawScene();
             }
@@ -115,16 +115,16 @@ namespace _3DFacesProcessing
         {
             switch (e.KeyChar)
             {
-                case 'w': camera.move(shiftY: 5); break;
-                case 'a': camera.move(shiftX: -5); break;
-                case 's': camera.move(shiftY: -5); break;
-                case 'd': camera.move(shiftX: 5); break;
-                case 'q': camera.move(shiftZ: 5); break;
-                case 'e': camera.move(shiftZ: -5); break;
+                case 'w': camera.move('f'); break;
+                case 'a': camera.move('l'); break;
+                case 's': camera.move('b'); break;
+                case 'd': camera.move('r'); break;
+                //case 'q': camera.move(shiftZ: 5); break;
+                //case 'e': camera.move(shiftZ: -5); break;
                 default: return;
             }
             redrawScene();
-            label7.Text = $"{camera.location}";
+            label7.Text = $"{camera.Location}";
             e.Handled = true;
         }
     }

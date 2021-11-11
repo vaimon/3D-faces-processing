@@ -57,12 +57,13 @@ namespace _3DFacesProcessing
         {
             var pf1 = line.Start.to2D(camera);
             var pf2 = line.End.to2D(camera);
-            if(!pf1.HasValue || !pf2.HasValue)
-            {
-                return;
-            }
+            //if (!pf1.HasValue || !pf2.HasValue)
+            //{
+            //    return;
+            //}
             //g.DrawLine(pen, line.Start.to2D(), line.End.to2D());
             drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(canvas.Height - pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(canvas.Height - pf2.Value.Y)), pen.Color);
+            //drawVuLine(new System.Drawing.Point((int)pf1.X, (int)(canvas.Height - pf1.Y)), new System.Drawing.Point((int)pf2.X, (int)(canvas.Height - pf2.Y)), pen.Color);
         }
 
         /// <summary>
@@ -102,44 +103,8 @@ namespace _3DFacesProcessing
                 }
                 drawShape(sceneShapes[i], blackPen);
             }
-            //var cam = PolarCoords.carthesianToPolar(camera.location);
-            //Line l = new Line(PolarCoords.polarToCarthesian(cam.polarAngle,cam.alphaAngle,cam.r + 5), camera.LVector);
-            //drawLine(l,highlightPen);
             fbitmap.Dispose();
             canvas.Image = bitmap;         
-        }
-    }
-
-    public class Camera
-    {
-        public Point location;
-        Point vectorOfView;
-        public double currentAnglePolar;
-        public double currentAngleAlpha;
-
-        public Point Vector { get { return vectorOfView; } }
-        public Point LVector { get { return new Point(location.X + 100*vectorOfView.X, location.Y + 100 * vectorOfView.Y, location.Z + 100 * vectorOfView.Z); } }
-
-        public Camera(Point location)
-        {
-            this.location = location;
-            currentAnglePolar = 0;
-            currentAngleAlpha = 0;
-            vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAngleAlpha);
-        }
-
-        public void changeViewAngle(double shiftPolarAngle, double shiftAlphaAngle)
-        {
-            currentAnglePolar = (currentAnglePolar + shiftPolarAngle) % 360;
-            currentAngleAlpha = (currentAngleAlpha + shiftAlphaAngle) % 360;
-            vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAngleAlpha);
-        }
-
-        public void move(int shiftX = 0, int shiftY = 0, int shiftZ = 0)
-        {
-            location.Xf += shiftX;
-            location.Yf += shiftY;
-            location.Zf += shiftZ;
         }
     }
 }

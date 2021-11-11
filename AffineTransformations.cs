@@ -70,7 +70,7 @@ namespace _3DFacesProcessing
         /// <param name="shape">Фигура</param>
         /// <param name="type">Ось, вокруг которой поворачиваем</param>
         /// <param name="angle">Угол поворота в градусах</param>
-        public static void rotate(ref Shape shape, AxisType type, int angle)
+        public static void rotate(ref Shape shape, AxisType type, double angle)
         {
             Matrix rotation = new Matrix(0, 0);
 

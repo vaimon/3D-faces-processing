@@ -99,29 +99,14 @@ namespace _3DFacesProcessing
 
         public PointF? to2D(Camera cam)
         {
-            Matrix viewMatrix = (new Matrix(4, 4).fill(1, 0, 0, -cam.location.X, 0, 1, 0, -cam.location.Y, 0, 0, 1, -cam.location.Z, 0, 0, 0, 1));
-            var viewCords = viewMatrix * new Matrix(4, 1).fill(Xf, Yf, Zf, 1);
-            //var normalizedPoint = new Point(viewCords[0, 0], viewCords[1, 0], viewCords[2, 0]);
-            var polarPoint = PolarCoords.carthesianToPolar(new Point(viewCords[0, 0], viewCords[1, 0], viewCords[2, 0]));
-            var normalizedPoint = PolarCoords.polarToCarthesian(polarPoint.polarAngle - cam.currentAnglePolar, polarPoint.alphaAngle - cam.currentAngleAlpha, polarPoint.r);
 
             if (projection == ProjectionType.PARALLEL) {
-                Matrix res = new Matrix(1, 4).fill(normalizedPoint.Xf, normalizedPoint.Yf, normalizedPoint.Zf, 1) * parallelProjectionMatrix;
-                var scaledX = screenSize.Width * (float)res[0, 0] / (float)res[0, 3];
-                var scaledY = screenSize.Height * (float)res[0, 1] / (float)res[0, 3];
-                return new PointF(worldCenter.X + scaledX, worldCenter.Y + scaledY);
-                //return new PointF((float)res[0, 0], (float)res[0, 1]);
+                Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * cam.LookAt * parallelProjectionMatrix;
+                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
             } else if (projection == ProjectionType.PERSPECTIVE)
             {
-                Matrix res = new Matrix(1, 4).fill(normalizedPoint.Xf, normalizedPoint.Yf, normalizedPoint.Zf, 1) * perspectiveProjectionMatrix;
-                var scaledX = screenSize.Width * (float)res[0, 0] / (float)res[0, 3];
-                var scaledY = screenSize.Height * (float)res[0, 1] / (float)res[0, 3];
-                if(res[0,2] < 0)
-                {
-                    return null;
-                }
-                return new PointF(worldCenter.X + scaledX, worldCenter.Y + scaledY);
-                //return new PointF((float)res[0, 0], (float)res[0, 1]);
+                Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * cam.LookAt * perspectiveProjectionMatrix;
+                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
             }
             else
             {
@@ -839,6 +824,52 @@ namespace _3DFacesProcessing
                 }
             }
             return res;
+        }
+    }
+
+    public class Vector
+    {
+        public double x, y, z;
+        public Vector(double x, double y, double z, bool isVectorNeededToBeNormalized = false)
+        {
+            double normalization = isVectorNeededToBeNormalized ? Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2)) : 1;
+            this.x = x / normalization;
+            this.y = y / normalization;
+            this.z = z / normalization;
+        }
+
+        public Vector(Point p, bool isVectorNeededToBeNormalized = false) : this(p.Xf,p.Yf,p.Zf,isVectorNeededToBeNormalized)
+        {
+
+        }
+
+        public Vector normalize()
+        {
+            double normalization = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
+            x = x / normalization;
+            y = y / normalization;
+            z = z / normalization;
+            return this;
+        }
+
+        public static Vector operator -(Vector v1, Vector v2)
+        {
+            return new Vector(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+        }
+
+        public static Vector operator +(Vector v1, Vector v2)
+        {
+            return new Vector(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+        }
+
+        public static Vector operator *(Vector a, Vector b)
+        {
+            return new Vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+        }
+
+        public static Vector operator *(double k, Vector b)
+        {
+            return new Vector(k*b.x,k*b.y,k*b.z);
         }
     }
 }

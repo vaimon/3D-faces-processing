@@ -112,46 +112,84 @@ namespace _3DFacesProcessing
 
     }
 
-    public class PolarCoords
+    /// <summary>
+    /// Я сдался после 8 часов попыток и взял все идеи отсюда: https://habr.com/ru/post/327604/
+    /// </summary>
+    public class Camera
     {
-        public double r;
-        public double polarAngle;
-        public double alphaAngle;
+        Vector cameraPos;
+        public double currentAnglePolar;
+        public double currentAzimuthalAlpha;
+        Vector worldUp;
+        public Vector cameraRight;
+        public Vector cameraFront;
+        public Vector cameraUp;
+        const double cameraSpeed = 5;
 
-        public PolarCoords(double r, double polarAngle, double alphaAngle)
+        //public Vector Vector { get { return cameraDirection; } }
+        public Point Location { get { return new Point(cameraPos.x, cameraPos.y, cameraPos.z); } }
+
+        public Camera()
         {
-            this.r = r;
-            this.polarAngle = polarAngle;
-            this.alphaAngle = alphaAngle;
+            cameraPos = new Vector(0,0,0);
+            currentAnglePolar = 0;
+            currentAzimuthalAlpha = -90;
+            worldUp = new Vector(0, 1, 0);
+            cameraFront = new Vector(0, 0, -1);
+            updateVectors();
         }
 
-        public PolarCoords()
+        public Matrix LookAt { get { return lookAt(cameraPos, cameraPos + cameraFront, cameraUp); } }
+
+        Matrix lookAt(Vector eye, Vector target, Vector upDir)
         {
+            // compute the forward vector from target to eye 
+            Vector forward = eye - target;
+            forward.normalize();                 // make unit length 
+
+            // compute the left vector 
+            Vector left = upDir * forward; // cross product 
+            left.normalize();
+
+            // recompute the orthonormal up vector 
+            Vector up = forward * left;    // cross product 
+
+            return new Matrix(4,4).fill(left.x,up.x,forward.x,0, left.y, up.y, forward.y,0, left.z, up.z, forward.z,0,(-left.x * eye.x - left.y * eye.y - left.z * eye.z), -up.x * eye.x - up.y * eye.y - up.z * eye.z, -forward.x * eye.x - forward.y * eye.y - forward.z * eye.z,1);         
         }
 
-        public static Point polarToCarthesian (double polarAngle, double alphaAngle, double r = 1)
+        public void changeViewAngle(double shiftY, double shiftX)
         {
-            return new Point(r * Geometry.Sin(polarAngle) * Geometry.Cos(alphaAngle), r * Geometry.Sin(polarAngle) * Geometry.Sin(alphaAngle), r * Geometry.Cos(polarAngle));
-        }
-
-        public static PolarCoords carthesianToPolar (Point p)
-        {
-            PolarCoords res = new PolarCoords();
-            res.r = Math.Sqrt(Math.Pow(p.Xf, 2) + Math.Pow(p.Yf, 2) + Math.Pow(p.Zf, 2));
-            res.polarAngle = Geometry.radiansToDegrees(Math.Atan(Math.Sqrt(Math.Pow(p.Xf, 2) + Math.Pow(p.Yf, 2))/p.Zf));
-            double atan;
-            if(p.X == 0)
+            currentAnglePolar += shiftY;
+            if (currentAnglePolar > 89)
             {
-                atan = Math.Atan(double.NegativeInfinity);
+                currentAnglePolar = 89;
             }
-            else
+            if (currentAnglePolar < -89)
             {
-                atan = Math.Atan(p.Yf / p.Xf);
+                currentAnglePolar = -89;
             }
-            res.alphaAngle = Geometry.radiansToDegrees(atan + (p.X >0 ? 0 : Math.PI));
-            return res;
+            currentAzimuthalAlpha = (currentAzimuthalAlpha + shiftX) % 360;
+            //vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAzimuthalAlpha);
+            //cameraFront = new Vector(Geometry.Cos(currentAnglePolar) * Geometry.Cos(currentAzimuthalAlpha), Geometry.Sin(currentAnglePolar), Geometry.Cos(currentAnglePolar) * Geometry.Sin(currentAzimuthalAlpha), isVectorNeededToBeNormalized: true);
+            updateVectors();
         }
 
+        void updateVectors()
+        {
+            cameraFront = new Vector(Geometry.Cos(currentAnglePolar) * Geometry.Cos(currentAzimuthalAlpha), Geometry.Sin(currentAnglePolar), Geometry.Cos(currentAnglePolar) * Geometry.Sin(currentAzimuthalAlpha), isVectorNeededToBeNormalized: true);
+            cameraRight = (cameraFront * worldUp).normalize();
+            cameraUp = (cameraRight * cameraFront).normalize();
+        }
 
+        public void move(char dir)
+        {
+            switch (dir)
+            {
+                case 'f': cameraPos += cameraSpeed * cameraFront; break;
+                case 'b': cameraPos -= cameraSpeed * cameraFront; break;
+                case 'l': cameraPos -= cameraSpeed * cameraRight; break;
+                case 'r': cameraPos += cameraSpeed * cameraRight; break;
+            }
+        }
     }
 }
