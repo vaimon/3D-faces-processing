@@ -127,5 +127,10 @@ namespace _3DFacesProcessing
             //label7.Text = $"{camera.Location}";
             e.Handled = true;
         }
+
+        private void z_buffer_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
