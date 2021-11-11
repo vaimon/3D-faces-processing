@@ -13,6 +13,16 @@ namespace _3DFacesProcessing
     /// Тип проекции на экран
     /// </summary>
     public enum ProjectionType { ISOMETRIC, PERSPECTIVE, TRIMETRIC, DIMETRIC, PARALLEL }
+    public class Point2d
+    {
+        double x, y;
+        public Point2d(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+           
+        }
+    }
     /// <summary>
     /// Точка в пространстве
     /// </summary>
