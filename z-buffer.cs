@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace _3DFacesProcessing
 { using FastBitmap;
-    class z_buffer
+    class Z_buffer
     {
         public static List<int> interpolate(int x1, int y1, int x2, int y2)
         {
@@ -141,13 +141,14 @@ namespace _3DFacesProcessing
 
         }
 
-        public static FastBitmap z_buf(int width, int height, List<Shape> scene, List<Color> colors)
+        public static Bitmap z_buf(int width, int height, List<Shape> scene, List<Color> colors)
         {
-            Bitmap bitmap = new Bitmap(width, height);
-            FastBitmap canvas = new FastBitmap(bitmap);
+            //Bitmap bitmap = new Bitmap(width, height);
+            Bitmap canvas = new Bitmap(width, height);
+            //new FastBitmap(bitmap);
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++)
-                    canvas.SetPixel(new System.Drawing.Point(i, j), Color.White);
+                    canvas.SetPixel(i, j, Color.White);//new System.Drawing.Point(i, j)
             //z-буфер
             double[,] zbuffer = new double[width, height];
             for (int i = 0; i < width; i++)
@@ -183,7 +184,7 @@ namespace _3DFacesProcessing
                             if (p.Z < zbuffer[x, y])
                             {
                                 zbuffer[x, y] = p.Z;
-                                canvas.SetPixel(new System.Drawing.Point(x, y), colors[index % colors.Count()]);
+                                canvas.SetPixel(x, y, colors[index % colors.Count()]);
                             }
 
                         }
