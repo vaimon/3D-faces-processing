@@ -147,10 +147,12 @@ namespace _3DFacesProcessing
     {
         List<Line> edges;
         Point normVector;
+        List<Point> verticles;
 
         public Face()
         {
             edges = new List<Line>();
+            verticles = new List<Point>();
             normVector = new Point(0,0,0);
         }
 
@@ -171,7 +173,18 @@ namespace _3DFacesProcessing
             recalculateNormVector();
             return this;
         }
+        public Face addVerticle(Point p)
+        {
+            verticles.Add(p);
+            return this;
+        }
+        public Face addVerticles(IEnumerable<Point> points)
+        {
+            this.verticles.AddRange(points);
+            return this;
+        }
 
+        public List<Point> Verticles { get => verticles; }
         void recalculateNormVector()
         {
             Point a = edges.First().getVectorCoordinates(), b = edges.Last().getReverseVectorCoordinates();
@@ -205,10 +218,11 @@ namespace _3DFacesProcessing
     public class Shape
     {
         List<Face> faces;
-
+        List<Point> verticles;
         public Shape()
         {
             faces = new List<Face>();
+            verticles = new List<Point>();
         }
 
         public Shape(IEnumerable<Face> faces) : this()
@@ -228,6 +242,23 @@ namespace _3DFacesProcessing
         }
 
         public List<Face> Faces { get => faces; }
+        public Shape(IEnumerable<Point> verticles) : this()
+        {
+            this.verticles.AddRange(verticles);
+        }
+
+        public Shape addVerticle(Point verticle)
+        {
+            verticles.Add(verticle);
+            return this;
+        }
+        public Shape addVerticles(IEnumerable<Point> verticles)
+        {
+            this.verticles.AddRange(verticles);
+            return this;
+        }
+
+        public List<Point> Verticles { get => verticles; }
 
         /// <summary>
         /// Преобразует все точки в фигуре по заданной функции
@@ -269,6 +300,7 @@ namespace _3DFacesProcessing
             Shape res = new Shape();
             StreamReader sr = new StreamReader(fileName);
             List<Line> edgs = new List<Line>();
+           
             // название фигуры
             string line = sr.ReadLine();
             if (line != null)
@@ -612,6 +644,7 @@ namespace _3DFacesProcessing
             Point c = new Point(200, 0, 200);
             Point f = new Point(200, 200, 0);
             Point h = new Point(0, 200, 200);
+            res.addVerticles(new List<Point> { a, c, f, h });
             res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, c)).addEdge(new Line(c, a)));
             res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f)));
             res.addFace(new Face().addEdge(new Line(c, h)).addEdge(new Line(h, a)).addEdge(new Line(a, c)));
@@ -639,7 +672,7 @@ namespace _3DFacesProcessing
             Point d = cube.Faces[3].getCenter();
             Point e = cube.Faces[4].getCenter();
             Point f = cube.Faces[5].getCenter();
-
+            res.addVerticles(new List<Point> { a,b, c, d,e,f });
             res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, b)).addEdge(new Line(b, a)));
             res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, f)).addEdge(new Line(f, b)));
             res.addFace(new Face().addEdge(new Line(c, d)).addEdge(new Line(d, f)).addEdge(new Line(f, c)));
@@ -666,6 +699,7 @@ namespace _3DFacesProcessing
             Point f = new Point(200, 200, 0);
             Point g = new Point(200, 200, 200);
             Point h = new Point(0, 200, 200);
+            res.addVerticles(new List<Point> { a,b, c,d,e, f,g, h });
             res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, c)).addEdge(new Line(c, d)).addEdge(new Line(d, a)));
             res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)));
             res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)));
