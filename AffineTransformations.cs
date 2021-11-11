@@ -93,5 +93,29 @@ namespace _3DFacesProcessing
                 p = new Point(res[0, 0], res[1, 0], res[2, 0]);
             });
         }
+
+
+        public static void rotateVectors(ref Vector vector1, ref Vector vector2, double angle, Vector axis)
+        {
+            // int A = p1.Y - p2.Y;//общее уравнение прямой, проходящей через заданные точки
+            //int B = p2.X - p1.X;//вектор нормали 
+            //int C = p1.X * p2.Y - p2.X *p1.Y;
+            axis.normalize();
+            double l = axis.x;
+            double m = axis.y;
+            double n = axis.z;
+            // Point scaledvector = new Point(l, m, n);//направленный вектор
+            double anglesin = Geometry.Sin(angle);
+            double anglecos = Geometry.Cos(angle);
+            Matrix rotation = new Matrix(4, 4).fill(l * l + anglecos * (1 - l * l), l * (1 - anglecos) * m - n * anglesin, l * (1 - anglecos) * n + m * anglesin, 0,
+                                 l * (1 - anglecos) * m + n * anglesin, m * m + anglecos * (1 - m * m), m * (1 - anglecos) * n - l * anglesin, 0,
+                                 l * (1 - anglecos) * n - m * anglesin, m * (1 - anglecos) * n + l * anglesin, n * n + anglecos * (1 - n * n), 0,
+                                 0, 0, 0, 1);
+
+            var res = rotation * new Matrix(4, 1).fill(vector1.x, vector1.y, vector1.z, 1);
+            vector1 = new Vector(res[0, 0], res[1, 0], res[2, 0],true);
+            res = rotation * new Matrix(4, 1).fill(vector2.x, vector2.y, vector2.z, 1);
+            vector2 = new Vector(res[0, 0], res[1, 0], res[2, 0],true);
         }
+    }
     }

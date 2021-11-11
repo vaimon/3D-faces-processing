@@ -76,9 +76,13 @@ namespace _3DFacesProcessing
             {
                 Point.projection = ProjectionType.PARALLEL;
             }
-            else
+            else if (rbPerspective.Checked)
             {
                 Point.projection = ProjectionType.PERSPECTIVE;
+            }
+            else
+            {
+                Point.projection = ProjectionType.TRIMETRIC;
             }
             redrawScene();
         }
@@ -94,10 +98,10 @@ namespace _3DFacesProcessing
         {
             if (isMoving)
             {
-                //camera.changeViewAngle((previousLocation.Y - e.Y) / 10.0, (e.X - previousLocation.X) / 10.0);
+                //camera.changeView(e.X - previousLocation.X, previousLocation.Y - e.Y);
                 //label5.Text = $"{camera.} => {Math.Round(camera.currentAzimuthalAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
-                previousLocation = e.Location;
-                redrawScene();
+                //previousLocation = e.Location;
+                //redrawScene();
             }
         }
 
@@ -115,13 +119,16 @@ namespace _3DFacesProcessing
         {
             switch (e.KeyChar)
             {
-                //case 'w': camera.move('f'); break;
-                //case 'a': camera.move('l'); break;
-                //case 's': camera.move('b'); break;
-                //case 'd': camera.move('r'); break;
-                //case 'q': camera.move(shiftZ: 5); break;
-                //case 'e': camera.move(shiftZ: -5); break;
-                default: return;
+                case 'w': camera.move(shiftY: 5); break;
+                case 'a': camera.move(shiftX: -5); break;
+                case 's': camera.move(shiftY: -5); break;
+                case 'd': camera.move(shiftX: 5); break;
+                case 'q': camera.move(shiftZ: 5); break;
+                case 'e': camera.move(shiftZ: -5); break;
+                case 'i': camera.changeView(shiftY: 2); break;
+                case 'j': camera.changeView(shiftX: -2); break;
+                case 'k': camera.changeView(shiftY: -2); break;
+                case 'l': camera.changeView(shiftX: 2); break;
             }
             redrawScene();
             //label7.Text = $"{camera.Location}";

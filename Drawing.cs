@@ -55,10 +55,25 @@ namespace _3DFacesProcessing
         /// <param name="pen">Цвет линии</param>
         void drawLine(Line line, Pen pen)
         {
-            var pf1 = line.Start.to2D(camera);
-            var pf2 = line.End.to2D(camera);
-            drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(canvas.Height - pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(canvas.Height - pf2.Value.Y)), pen.Color);
-            //drawVuLine(new System.Drawing.Point((int)pf1.X, (int)(canvas.Height - pf1.Y)), new System.Drawing.Point((int)pf2.X, (int)(canvas.Height - pf2.Y)), pen.Color);
+            PointF? pf1, pf2;
+            //if (rbParallel.Checked)
+            //{
+            //    pf1 = line.Start.to2D(camera);
+            //    pf2 = line.End.to2D(camera);
+            //}
+            //else
+            //{
+            //    pf1 = line.Start.to2D();
+            //    pf2 = line.End.to2D();
+            //}
+            pf1 = line.Start.to2D(camera);
+            pf2 = line.End.to2D(camera);
+            if(pf1.HasValue && pf2.HasValue)
+            {
+                drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(canvas.Height - pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(canvas.Height - pf2.Value.Y)), pen.Color);
+            }
+
+            // drawVuLine(new System.Drawing.Point((int)pf1.X, (int)(canvas.Height - pf1.Y)), new System.Drawing.Point((int)pf2.X, (int)(canvas.Height - pf2.Y)), pen.Color);
         }
 
         /// <summary>
@@ -98,6 +113,10 @@ namespace _3DFacesProcessing
                 }
                 drawShape(sceneShapes[i], blackPen);
             }
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraDirection.x * 50, camera.cameraPosition.Yf + camera.cameraDirection.y * 50, camera.cameraPosition.Zf + camera.cameraDirection.z * 50)), new Pen(Color.CadetBlue));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraRight.x * 50, camera.cameraPosition.Yf + camera.cameraRight.y * 50, camera.cameraPosition.Zf + camera.cameraRight.z * 50)), new Pen(Color.DarkOrange));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraUp.x * 50, camera.cameraPosition.Yf + camera.cameraUp.y * 50, camera.cameraPosition.Zf + camera.cameraUp.z * 50)), new Pen(Color.Violet));
+            //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
             fbitmap.Dispose();
             canvas.Image = bitmap;         
         }

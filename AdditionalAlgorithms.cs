@@ -116,16 +116,47 @@ namespace _3DFacesProcessing
     {
         public Point cameraPosition;
         public Vector cameraDirection;
+        public Vector cameraUp;
+        public Vector cameraRight;
+        const double cameraRotationSpeed = 1;
+        double yaw = 0.0, pitch = 0.0;
 
         public Camera()
         {
+            cameraPosition = new Point(-10, 0, 0);
+            cameraDirection = new Vector(1, 0, 0);
+            cameraUp = new Vector(0, 0, 1);
+            cameraRight = (cameraUp * cameraDirection).normalize();
         }
 
-        public Camera(Point cameraPos, Vector cameraDirection)
+        public void move(double shiftX = 0, double shiftY = 0, double shiftZ = 0)
         {
-            this.cameraPosition = cameraPos;
-            this.cameraDirection = cameraDirection;
+            cameraPosition.Xf += shiftX;
+            cameraPosition.Yf += shiftY;
+            cameraPosition.Zf += shiftZ;
         }
 
+        public Point toCameraView(Point p)
+        {
+            return new Point(cameraRight.x * (p.Xf - cameraPosition.Xf) + cameraRight.y * (p.Yf - cameraPosition.Yf) + cameraRight.z * (p.Zf - cameraPosition.Zf),
+                             cameraUp.x * (p.Xf - cameraPosition.Xf) + cameraUp.y * (p.Yf - cameraPosition.Yf) + cameraUp.z * (p.Zf - cameraPosition.Zf),
+                             cameraDirection.x * (p.Xf - cameraPosition.Xf) + cameraDirection.y * (p.Yf - cameraPosition.Yf) + cameraDirection.z * (p.Zf - cameraPosition.Zf));
+        }
+
+        public void changeView(double shiftX = 0, double shiftY = 0)
+        {
+            var newPitch = Math.Clamp(pitch + shiftY * cameraRotationSpeed,-89.0,89.0);
+            var newYaw = (yaw + shiftX) % 360;
+            if(newPitch != pitch)
+            {
+                AffineTransformations.rotateVectors(ref cameraDirection, ref cameraUp, (newPitch - pitch), cameraRight);
+                pitch = newPitch;
+            }
+            if(newYaw != yaw)
+            {
+                AffineTransformations.rotateVectors(ref cameraDirection, ref cameraRight, (newYaw - yaw), cameraUp);
+                yaw = newYaw;
+            }
+        }
     }
 }

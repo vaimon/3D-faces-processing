@@ -54,6 +54,7 @@ namespace _3DFacesProcessing
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -86,7 +87,7 @@ namespace _3DFacesProcessing
             // 
             // btnShowAxis
             // 
-            this.btnShowAxis.Location = new System.Drawing.Point(49, 583);
+            this.btnShowAxis.Location = new System.Drawing.Point(46, 609);
             this.btnShowAxis.Margin = new System.Windows.Forms.Padding(2);
             this.btnShowAxis.Name = "btnShowAxis";
             this.btnShowAxis.Size = new System.Drawing.Size(233, 44);
@@ -240,7 +241,7 @@ namespace _3DFacesProcessing
             // 
             this.pictureBox1.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._cc3333_0008e6_01bc0d_1920_1080;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(46, 580);
+            this.pictureBox1.Location = new System.Drawing.Point(43, 606);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(239, 50);
             this.pictureBox1.TabIndex = 29;
@@ -270,7 +271,6 @@ namespace _3DFacesProcessing
             this.rbParallel.Name = "rbParallel";
             this.rbParallel.Size = new System.Drawing.Size(237, 29);
             this.rbParallel.TabIndex = 30;
-            this.rbParallel.TabStop = true;
             this.rbParallel.Text = "Параллельная проекция";
             this.rbParallel.UseVisualStyleBackColor = false;
             this.rbParallel.CheckedChanged += new System.EventHandler(this.rbParallel_CheckedChanged);
@@ -342,6 +342,20 @@ namespace _3DFacesProcessing
             this.label7.TabIndex = 33;
             this.label7.Text = "label5";
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.BackColor = System.Drawing.SystemColors.Control;
+            this.radioButton1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.radioButton1.Location = new System.Drawing.Point(45, 569);
+            this.radioButton1.Margin = new System.Windows.Forms.Padding(2);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(190, 29);
+            this.radioButton1.TabIndex = 30;
+            this.radioButton1.Text = "Взгляд со стороны";
+            this.radioButton1.UseVisualStyleBackColor = false;
+            this.radioButton1.CheckedChanged += new System.EventHandler(this.rbParallel_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
@@ -350,6 +364,7 @@ namespace _3DFacesProcessing
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.rbParallel);
             this.Controls.Add(this.rbPerspective);
             this.Controls.Add(this.groupBox1);
@@ -401,6 +416,7 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.RadioButton radioButton1;
     }
 }
 

@@ -99,15 +99,26 @@ namespace _3DFacesProcessing
 
         public PointF? to2D(Camera cam)
         {
-            return new PointF(0,0);
+            var viewCoord = cam.toCameraView(this);
+
             if (projection == ProjectionType.PARALLEL) {
-            } else if (projection == ProjectionType.PERSPECTIVE)
-            {
+                if (viewCoord.Z > 0)
+                {
+                    return new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf);
+                }
+                return null;
             }
-            else
+            else if (projection == ProjectionType.PERSPECTIVE)
             {
-                throw new Exception("Invalid projection type using camera");
+                return null;
+            } else
+            {
+                return to2D();
             }
+            //else
+            //{
+            //    throw new Exception("Invalid projection type using camera");
+            //}
         }
         public override string ToString()
         {
