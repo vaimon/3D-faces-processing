@@ -29,7 +29,7 @@ namespace _3DFacesProcessing
             {
                 for (int j = 0; j < colCount; j++)
                 {
-                    matr[i, j] = Math.Round(elems[i * colCount + j], 2);
+                    matr[i, j] = elems[i * colCount + j];
                 }
             }
             return this;
@@ -92,7 +92,7 @@ namespace _3DFacesProcessing
                 {
                     for (var k = 0; k < matrix1.colCount; k++)
                     {
-                        res[i, j] += Math.Round(matrix1[i, k] * matrix2[k, j],5);
+                        res[i, j] += matrix1[i, k] * matrix2[k, j];
                     }
                 }
             }

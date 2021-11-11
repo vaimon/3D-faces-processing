@@ -26,8 +26,9 @@ namespace _3DFacesProcessing
         static Matrix isometricMatrix = new Matrix(3,3).fill(Math.Sqrt(3),0,-Math.Sqrt(3),1,2,1, Math.Sqrt(2),-Math.Sqrt(2), Math.Sqrt(2)) * (1/ Math.Sqrt(6));
         static Matrix trimetricMatrix = new Matrix(4, 4).fill(Math.Sqrt(3)/2, Math.Sqrt(2)/4, 0, 1, 0, Math.Sqrt(2)/2, 0, 1, 0.5,-Math.Sqrt(6)/4,0,0,0,0,0,1);
         static Matrix dimetricMatrix = new Matrix(4, 4).fill(0.926, 0.134, 0, 0, 0, 0.935, 0, 0, 0.378, -0.327, 0, 0, 0, 0, 0, 1);
-        static Matrix centralMatrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, k, 0, 0, 0, 1);
+        static Matrix centralMatrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, zScreenNear, 0, 0, 0, 1);
         static Matrix parallelProjectionMatrix, perspectiveProjectionMatrix;
+        static Matrix simpleProjection = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
         const double k = 0.001f;
         public Point(int x, int y, int z)
         {
@@ -102,15 +103,16 @@ namespace _3DFacesProcessing
             var viewCoord = cam.toCameraView(this);
 
             if (projection == ProjectionType.PARALLEL) {
-                if (viewCoord.Z > 0)
-                {
-                    return new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf);
-                }
-                return null;
+                Matrix res = new Matrix(4, 1).fill(viewCoord.Xf, viewCoord.Yf, viewCoord.Zf, 1);
+                return new PointF((float)(res[0, 0] ), (float)(res[1, 0]));
+                //Matrix res = simpleProjection * new Matrix(4, 1).fill(Yf, Zf, Xf, 1);
+                //return new PointF((float)(res[0, 0]), (float)(res[1, 0]));
             }
             else if (projection == ProjectionType.PERSPECTIVE)
             {
-                return null;
+                var eyeDistance = 200;
+                Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance),viewCoord.Zf,1);
+                return new PointF(worldCenter.X + (float)(res[0, 0]), worldCenter.Y + (float)(res[0, 1]));
             } else
             {
                 return to2D();

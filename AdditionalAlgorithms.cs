@@ -125,8 +125,8 @@ namespace _3DFacesProcessing
         {
             cameraPosition = new Point(-10, 0, 0);
             cameraDirection = new Vector(1, 0, 0);
-            cameraUp = new Vector(0, 0, 1);
-            cameraRight = (cameraUp * cameraDirection).normalize();
+            cameraUp = new Vector(0, 1, 0);
+            cameraRight = (cameraDirection * cameraUp).normalize();
         }
 
         public void move(double shiftX = 0, double shiftY = 0, double shiftZ = 0)
@@ -138,9 +138,29 @@ namespace _3DFacesProcessing
 
         public Point toCameraView(Point p)
         {
-            return new Point(cameraRight.x * (p.Xf - cameraPosition.Xf) + cameraRight.y * (p.Yf - cameraPosition.Yf) + cameraRight.z * (p.Zf - cameraPosition.Zf),
-                             cameraUp.x * (p.Xf - cameraPosition.Xf) + cameraUp.y * (p.Yf - cameraPosition.Yf) + cameraUp.z * (p.Zf - cameraPosition.Zf),
-                             cameraDirection.x * (p.Xf - cameraPosition.Xf) + cameraDirection.y * (p.Yf - cameraPosition.Yf) + cameraDirection.z * (p.Zf - cameraPosition.Zf));
+            //return new Point(cameraRight.x * (p.Xf - cameraPosition.Xf) + cameraRight.y * (p.Yf - cameraPosition.Yf) + cameraRight.z * (p.Zf - cameraPosition.Zf),
+            //                 cameraUp.x * (p.Xf - cameraPosition.Xf) + cameraUp.y * (p.Yf - cameraPosition.Yf) + cameraUp.z * (p.Zf - cameraPosition.Zf),
+            //                 cameraDirection.x * (p.Xf - cameraPosition.Xf) + cameraDirection.y * (p.Yf - cameraPosition.Yf) + cameraDirection.z * (p.Zf - cameraPosition.Zf));
+            var res = cameraMatrix() * new Matrix(4, 1).fill(p.Xf, p.Yf, p.Zf, 1);
+            return new Point(res[0, 0], res[1, 0], res[2, 0]);
+        }
+
+        public Matrix cameraMatrix()
+        {
+            return new Matrix(4, 4).fill(1, 0, 0, 0,
+                                        0, 1, 0, 0,
+                                        0, 0, 1, -200,
+                                        0, 0, 0, 1) *
+                new Matrix(4, 4).fill(1, 0, 0, 0, 0, Geometry.Cos(pitch), -Geometry.Sin(pitch), 0, 0, Geometry.Sin(pitch), Geometry.Cos(pitch), 0, 0, 0, 0, 1) *
+                new Matrix(4, 4).fill(Geometry.Cos(yaw), 0, Geometry.Sin(yaw), 0, 0, 1, 0, 0, -Geometry.Sin(yaw), 0, Geometry.Cos(yaw), 0, 0, 0, 0, 1) *
+                new Matrix(4, 4).fill(1, 0, 0, 0,
+                                        0, 1, 0, 0,
+                                        0, 0, 1, 200,
+                                        0, 0, 0, 1) *
+                new Matrix(4, 4).fill(1, 0, 0, -cameraPosition.Xf,
+                                        0, 1, 0, -cameraPosition.Yf,
+                                        0, 0, 1, -cameraPosition.Zf,
+                                        0, 0, 0, 1);
         }
 
         public void changeView(double shiftX = 0, double shiftY = 0)
