@@ -120,7 +120,6 @@ namespace _3DFacesProcessing
         Vector cameraPos;
         public double currentAnglePolar;
         public double currentAzimuthalAlpha;
-        Vector worldUp;
         public Vector cameraRight;
         public Vector cameraFront;
         public Vector cameraUp;
@@ -131,12 +130,11 @@ namespace _3DFacesProcessing
 
         public Camera()
         {
-            cameraPos = new Vector(0,0,0);
+            cameraPos = new Vector(0, 0, 3);
+            cameraFront = new Vector(0, 0, -1);
+            cameraUp = new Vector(0, 1, 0);
             currentAnglePolar = 0;
             currentAzimuthalAlpha = -90;
-            worldUp = new Vector(0, 1, 0);
-            cameraFront = new Vector(0, 0, -1);
-            updateVectors();
         }
 
         public Matrix LookAt { get { return lookAt(cameraPos, cameraPos + cameraFront, cameraUp); } }
@@ -154,7 +152,7 @@ namespace _3DFacesProcessing
             // recompute the orthonormal up vector 
             Vector up = forward * left;    // cross product 
 
-            return new Matrix(4,4).fill(left.x,up.x,forward.x,0, left.y, up.y, forward.y,0, left.z, up.z, forward.z,0,(-left.x * eye.x - left.y * eye.y - left.z * eye.z), -up.x * eye.x - up.y * eye.y - up.z * eye.z, -forward.x * eye.x - forward.y * eye.y - forward.z * eye.z,1);         
+            return new Matrix(4,4).fill(left.x,left.y,left.z,0, up.x, up.y, up.z,0, forward.x, forward.y, forward.z,0,0,0,0,1) * new Matrix(4,4).fill(1,0,0,-eye.x,0,1,0,-eye.y,0,0,1,-eye.z,0,0,0,1);         
         }
 
         public void changeViewAngle(double shiftY, double shiftX)
@@ -169,16 +167,7 @@ namespace _3DFacesProcessing
                 currentAnglePolar = -89;
             }
             currentAzimuthalAlpha = (currentAzimuthalAlpha + shiftX) % 360;
-            //vectorOfView = PolarCoords.polarToCarthesian(currentAnglePolar, currentAzimuthalAlpha);
-            //cameraFront = new Vector(Geometry.Cos(currentAnglePolar) * Geometry.Cos(currentAzimuthalAlpha), Geometry.Sin(currentAnglePolar), Geometry.Cos(currentAnglePolar) * Geometry.Sin(currentAzimuthalAlpha), isVectorNeededToBeNormalized: true);
-            updateVectors();
-        }
-
-        void updateVectors()
-        {
             cameraFront = new Vector(Geometry.Cos(currentAnglePolar) * Geometry.Cos(currentAzimuthalAlpha), Geometry.Sin(currentAnglePolar), Geometry.Cos(currentAnglePolar) * Geometry.Sin(currentAzimuthalAlpha), isVectorNeededToBeNormalized: true);
-            cameraRight = (cameraFront * worldUp).normalize();
-            cameraUp = (cameraRight * cameraFront).normalize();
         }
 
         public void move(char dir)
@@ -187,8 +176,8 @@ namespace _3DFacesProcessing
             {
                 case 'f': cameraPos += cameraSpeed * cameraFront; break;
                 case 'b': cameraPos -= cameraSpeed * cameraFront; break;
-                case 'l': cameraPos -= cameraSpeed * cameraRight; break;
-                case 'r': cameraPos += cameraSpeed * cameraRight; break;
+                case 'l': cameraPos -= cameraSpeed * (cameraFront * cameraUp).normalize(); break;
+                case 'r': cameraPos += cameraSpeed * (cameraFront * cameraUp).normalize(); break;
             }
         }
     }
