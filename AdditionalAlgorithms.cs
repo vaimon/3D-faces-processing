@@ -112,73 +112,20 @@ namespace _3DFacesProcessing
 
     }
 
-    /// <summary>
-    /// Я сдался после 8 часов попыток и взял все идеи отсюда: https://habr.com/ru/post/327604/
-    /// </summary>
     public class Camera
     {
-        Vector cameraPos;
-        public double currentAnglePolar;
-        public double currentAzimuthalAlpha;
-        public Vector cameraRight;
-        public Vector cameraFront;
-        public Vector cameraUp;
-        const double cameraSpeed = 5;
-
-        //public Vector Vector { get { return cameraDirection; } }
-        public Point Location { get { return new Point(cameraPos.x, cameraPos.y, cameraPos.z); } }
+        public Point cameraPosition;
+        public Vector cameraDirection;
 
         public Camera()
         {
-            cameraPos = new Vector(0, 0, 3);
-            cameraFront = new Vector(0, 0, -1);
-            cameraUp = new Vector(0, 1, 0);
-            currentAnglePolar = 0;
-            currentAzimuthalAlpha = -90;
         }
 
-        public Matrix LookAt { get { return lookAt(cameraPos, cameraPos + cameraFront, cameraUp); } }
-
-        Matrix lookAt(Vector eye, Vector target, Vector upDir)
+        public Camera(Point cameraPos, Vector cameraDirection)
         {
-            // compute the forward vector from target to eye 
-            Vector forward = eye - target;
-            forward.normalize();                 // make unit length 
-
-            // compute the left vector 
-            Vector left = upDir * forward; // cross product 
-            left.normalize();
-
-            // recompute the orthonormal up vector 
-            Vector up = forward * left;    // cross product 
-
-            return new Matrix(4,4).fill(left.x,left.y,left.z,0, up.x, up.y, up.z,0, forward.x, forward.y, forward.z,0,0,0,0,1) * new Matrix(4,4).fill(1,0,0,-eye.x,0,1,0,-eye.y,0,0,1,-eye.z,0,0,0,1);         
+            this.cameraPosition = cameraPos;
+            this.cameraDirection = cameraDirection;
         }
 
-        public void changeViewAngle(double shiftY, double shiftX)
-        {
-            currentAnglePolar += shiftY;
-            if (currentAnglePolar > 89)
-            {
-                currentAnglePolar = 89;
-            }
-            if (currentAnglePolar < -89)
-            {
-                currentAnglePolar = -89;
-            }
-            currentAzimuthalAlpha = (currentAzimuthalAlpha + shiftX) % 360;
-            cameraFront = new Vector(Geometry.Cos(currentAnglePolar) * Geometry.Cos(currentAzimuthalAlpha), Geometry.Sin(currentAnglePolar), Geometry.Cos(currentAnglePolar) * Geometry.Sin(currentAzimuthalAlpha), isVectorNeededToBeNormalized: true);
-        }
-
-        public void move(char dir)
-        {
-            switch (dir)
-            {
-                case 'f': cameraPos += cameraSpeed * cameraFront; break;
-                case 'b': cameraPos -= cameraSpeed * cameraFront; break;
-                case 'l': cameraPos -= cameraSpeed * (cameraFront * cameraUp).normalize(); break;
-                case 'r': cameraPos += cameraSpeed * (cameraFront * cameraUp).normalize(); break;
-            }
-        }
     }
 }

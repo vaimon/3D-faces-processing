@@ -99,14 +99,10 @@ namespace _3DFacesProcessing
 
         public PointF? to2D(Camera cam)
         {
-
+            return new PointF(0,0);
             if (projection == ProjectionType.PARALLEL) {
-                Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * cam.LookAt * parallelProjectionMatrix;
-                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
             } else if (projection == ProjectionType.PERSPECTIVE)
             {
-                Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * cam.LookAt * perspectiveProjectionMatrix;
-                return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
             }
             else
             {

@@ -94,7 +94,7 @@ namespace _3DFacesProcessing
         {
             if (isMoving)
             {
-                camera.changeViewAngle((previousLocation.Y - e.Y) / 10.0, (e.X - previousLocation.X) / 10.0);
+                //camera.changeViewAngle((previousLocation.Y - e.Y) / 10.0, (e.X - previousLocation.X) / 10.0);
                 //label5.Text = $"{camera.} => {Math.Round(camera.currentAzimuthalAlpha,2)}/{Math.Round(camera.currentAnglePolar,2)}";
                 previousLocation = e.Location;
                 redrawScene();
@@ -115,16 +115,16 @@ namespace _3DFacesProcessing
         {
             switch (e.KeyChar)
             {
-                case 'w': camera.move('f'); break;
-                case 'a': camera.move('l'); break;
-                case 's': camera.move('b'); break;
-                case 'd': camera.move('r'); break;
+                //case 'w': camera.move('f'); break;
+                //case 'a': camera.move('l'); break;
+                //case 's': camera.move('b'); break;
+                //case 'd': camera.move('r'); break;
                 //case 'q': camera.move(shiftZ: 5); break;
                 //case 'e': camera.move(shiftZ: -5); break;
                 default: return;
             }
             redrawScene();
-            label7.Text = $"{camera.Location}";
+            //label7.Text = $"{camera.Location}";
             e.Handled = true;
         }
     }
