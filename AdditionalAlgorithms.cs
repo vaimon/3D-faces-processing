@@ -126,7 +126,7 @@ namespace _3DFacesProcessing
             cameraPosition = new Point(-10, 0, 0);
             cameraDirection = new Vector(1, 0, 0);
             cameraUp = new Vector(0, 0, 1);
-            cameraRight = (cameraUp * cameraDirection).normalize();
+            cameraRight = (cameraDirection * cameraUp).normalize();
         }
 
         public void move(double leftright = 0, double forwardbackward = 0, double updown = 0)

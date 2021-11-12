@@ -24,8 +24,8 @@ namespace _3DFacesProcessing
             camera = new Camera();
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
-            Point.projection = ProjectionType.PARALLEL;
-            Point.setProjection(canvas.Size, 0.1, 100, 90);
+            Point.projection = ProjectionType.PERSPECTIVE;
+            Point.setProjection(canvas.Size, 1, 100, 90);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -72,11 +72,7 @@ namespace _3DFacesProcessing
 
         private void rbParallel_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbParallel.Checked)
-            {
-                Point.projection = ProjectionType.PARALLEL;
-            }
-            else if (rbPerspective.Checked)
+            if (rbPerspective.Checked)
             {
                 Point.projection = ProjectionType.PERSPECTIVE;
             }

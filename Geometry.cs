@@ -43,7 +43,7 @@ namespace _3DFacesProcessing
             Point.zScreenFar = zScreenFar;
             Point.fov = fov;
             parallelProjectionMatrix = new Matrix(4, 4).fill(1.0 / screenSize.Width, 0, 0, 0, 0, 1.0 / screenSize.Height, 0, 0, 0, 0, -2.0 / (zScreenFar - zScreenNear), -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), 0, 0, 0, 1);
-            perspectiveProjectionMatrix = new Matrix(4,4).fill(Math.Atan(Geometry.degreesToRadians(fov / 2)), 0, 0, 0, 0, Math.Atan(Geometry.degreesToRadians(fov/2)), 0, 0, 0, 0, -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), 2 * (zScreenFar * zScreenNear) / (zScreenFar - zScreenNear), 0, 0, -1, 0);
+            perspectiveProjectionMatrix = new Matrix(4,4).fill(screenSize.Height/(Math.Tan(Geometry.degreesToRadians(fov / 2)) * screenSize.Width), 0, 0, 0, 0, 1.0/Math.Tan(Geometry.degreesToRadians(fov/2)), 0, 0, 0, 0, -(zScreenFar + zScreenNear) / (zScreenFar - zScreenNear), -2 * (zScreenFar * zScreenNear) / (zScreenFar - zScreenNear), 0, 0, -1, 0);
         }
 
         public Point(double x, double y, double z)
@@ -77,7 +77,7 @@ namespace _3DFacesProcessing
                 case ProjectionType.TRIMETRIC:
                     {
                         Matrix res = new Matrix(1, 4).fill(Yf, Zf, Xf, 1) * trimetricMatrix;
-                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y + (float)res[0, 1]);
+                        return new PointF(worldCenter.X + (float)res[0, 0], worldCenter.Y - (float)res[0, 1]);
                     }
 
                 case ProjectionType.DIMETRIC:
@@ -110,9 +110,28 @@ namespace _3DFacesProcessing
             }
             else if (projection == ProjectionType.PERSPECTIVE)
             {
-                var eyeDistance = 200;
-                Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
-                return new PointF(worldCenter.X + (float)(res[0, 0]), worldCenter.Y + (float)(res[0, 1]));
+                if(viewCoord.Zf < 0)
+                {
+                    return null;
+                }
+                //var eyeDistance = 200;
+                //Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
+                //return new PointF(worldCenter.X + (float)(res[0, 0]), worldCenter.Y + (float)(res[0, 1]));
+                Matrix res = new Matrix(1, 4).fill(viewCoord.Xf, viewCoord.Yf, viewCoord.Zf, 1) * perspectiveProjectionMatrix;
+                if(res[0,3] == 0)
+                {
+                    return null;
+                    //return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
+                }
+                res *= 1.0 / res[0, 3];
+                res[0, 0] = Math.Clamp(res[0, 0], -1, 1);
+                res[0, 1] = Math.Clamp(res[0, 1], -1, 1);
+                //res[0, 2] = Math.Clamp(res[0, 2], -1, 1);
+                if(res[0,2] < 0)
+                {
+                    return null;
+                }
+                return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
             } else
             {
                 return to2D();
