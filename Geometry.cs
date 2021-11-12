@@ -178,12 +178,12 @@ namespace _3DFacesProcessing
     public class Face
     {
         List<Line> edges;
-        Point normVector;
+        Vector normVector;
 
         public Face()
         {
             edges = new List<Line>();
-            normVector = new Point(0,0,0);
+            normVector = new Vector(0, 0, 0);
         }
 
         public Face(IEnumerable<Line> edges) : this()
@@ -206,11 +206,14 @@ namespace _3DFacesProcessing
 
         void recalculateNormVector()
         {
-            Point a = edges.First().getVectorCoordinates(), b = edges.Last().getReverseVectorCoordinates();
-            normVector = new Point(a.Yf * b.Zf - a.Zf * b.Yf, a.Xf * b.Zf - a.Zf * b.Xf, a.Xf * b.Yf - a.Yf * b.Xf);
+            
         }
 
-        public Point NormVector { get => normVector; }
+        public Vector NormVector { get {
+                Vector a = new Vector(edges.First().getVectorCoordinates()), b = new Vector(edges.Last().getReverseVectorCoordinates());
+                normVector = (b * a).normalize();
+                return normVector;
+            } }
 
         public List<Line> Edges { get => edges; }
 
@@ -698,12 +701,12 @@ namespace _3DFacesProcessing
             Point f = new Point(200, 200, 0);
             Point g = new Point(200, 200, 200);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, c)).addEdge(new Line(c, d)).addEdge(new Line(d, a)));
+            res.addFace(new Face().addEdge(new Line(a, d)).addEdge(new Line(d, c)).addEdge(new Line(c, b)).addEdge(new Line(b, a)));
             res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)));
             res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)));
-            res.addFace(new Face().addEdge(new Line(h, e)).addEdge(new Line(e, a)).addEdge(new Line(a, d)).addEdge(new Line(d, h)));
+            res.addFace(new Face().addEdge(new Line(h, d)).addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, h)));
             res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a)));
-            res.addFace(new Face().addEdge(new Line(d, c)).addEdge(new Line(c, g)).addEdge(new Line(g, h)).addEdge(new Line(h, d)));
+            res.addFace(new Face().addEdge(new Line(d, h)).addEdge(new Line(h, g)).addEdge(new Line(g, c)).addEdge(new Line(c, d)));
             return res;
         }
 

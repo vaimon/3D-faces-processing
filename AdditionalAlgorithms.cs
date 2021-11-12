@@ -111,9 +111,10 @@ namespace _3DFacesProcessing
         }
 
         // поиск нелицевых граней
-        Shape findNonFacial(Shape shape)
+        Shape findNonFacial(Shape shape, Camera camera)
         {
             Shape newShape;
+            double cos = 0.0;
             switch (shape.getShapeName())
             {
                 case "TETRAHEDRON":
@@ -141,8 +142,8 @@ namespace _3DFacesProcessing
                     throw new Exception("Такой фигуры нет :с");
             }
 
-            // пусть вектор обзора сейчас задается точкой (0,0,0) (пока не работает камера)
-            Vector vect = new Vector(0, 0, 0);
+            // вектор обзора
+            Vector vect = camera.cameraDirection;
 
             int sumX = 0, sumY = 0, sumZ = 0;
             foreach (var face in shape.Faces)
@@ -155,39 +156,50 @@ namespace _3DFacesProcessing
             Point center = new Point(sumX / shape.Faces.Count(), sumY / shape.Faces.Count(), sumZ / shape.Faces.Count());
 
             // вектор проекции
-            Vector proec = new Vector(center) - vect;
+            //Vector vecProec = new Vector(center) - vect;
 
             foreach (Face face in shape.Faces) // для каждой грани фигуры
             {
                 // вектор одного ребра грани
-                int firstVecX = face.Edges[0].Start.X - face.Edges[0].End.X;
-                int firstVecY = face.Edges[0].Start.Y - face.Edges[0].End.Y;
-                int firstVecZ = face.Edges[0].Start.Z - face.Edges[0].End.Z;
+                /* int firstVecX = face.Edges[0].End.X - face.Edges[0].Start.X;
+                 int firstVecY = face.Edges[0].End.Y - face.Edges[0].Start.Y;
+                 int firstVecZ = face.Edges[0].End.Z - face.Edges[0].Start.Z;*/
 
                 // вектор второго ребра грани
-                int secondVecX = face.Edges[1].Start.X - face.Edges[1].End.X;
-                int secondVecY = face.Edges[1].Start.Y - face.Edges[1].End.Y;
-                int secondVecZ = face.Edges[1].Start.Z - face.Edges[1].End.Z;
+                /* int secondVecX = face.Edges[1].Start.X - face.Edges[1].End.X;
+                 int secondVecY = face.Edges[1].Start.Y - face.Edges[1].End.Y;
+                 int secondVecZ = face.Edges[1].Start.Z - face.Edges[1].End.Z;*/
+                /* int secondVecX = face.Edges[face.Edges.Count() - 1].Start.X - face.Edges[face.Edges.Count() - 1].End.X;
+                 int secondVecY = face.Edges[face.Edges.Count() - 1].Start.Y - face.Edges[face.Edges.Count() - 1].End.Y;
+                 int secondVecZ = face.Edges[face.Edges.Count() - 1].Start.Z - face.Edges[face.Edges.Count() - 1].End.Z;*/
 
                 // вектор третьего ребра грани
-                int thirdVecX = face.Edges[2].Start.X - face.Edges[2].End.X;
-                int thirdVecY = face.Edges[2].Start.Y - face.Edges[2].End.Y;
-                int thirdVecZ = face.Edges[2].Start.Z - face.Edges[2].End.Z;
+                /*  int thirdVecX = face.Edges[2].End.X - face.Edges[2].Start.X;
+                  int thirdVecY = face.Edges[2].End.Y - face.Edges[2].Start.Y;
+                  int thirdVecZ = face.Edges[2].End.Z - face.Edges[2].Start.Z;*/
+                /* int thirdVecX = face.Edges[face.Edges.Count() - 1].Start.X - face.Edges[face.Edges.Count() - 1].End.X;
+                 int thirdVecY = face.Edges[face.Edges.Count() - 1].Start.Y - face.Edges[face.Edges.Count() - 1].End.Y;
+                 int thirdVecZ = face.Edges[face.Edges.Count() - 1].Start.Z - face.Edges[face.Edges.Count() - 1].End.Z;*/
 
-                Vector vect1 = new Vector(firstVecX - secondVecX, firstVecY - secondVecY, firstVecZ - secondVecZ);
-                Vector vect2 = new Vector(secondVecX - thirdVecX, secondVecY - thirdVecY, secondVecZ - thirdVecZ);
+                //Vector vect1 = new Vector(firstVecX - secondVecX, firstVecY - secondVecY, firstVecZ - secondVecZ);
+                //Vector vect2 = new Vector(secondVecX - thirdVecX, secondVecY - thirdVecY, secondVecZ - thirdVecZ);
+                //Vector vect1 = new Vector(firstVecX, firstVecY, firstVecZ);
+                //Vector vect2 = new Vector(secondVecX, secondVecY, secondVecZ);
 
                 // вектор нормали грани 
-                Vector vectNoraml = vect1 * vect; // векторное произведение
+                //Vector vectNoraml = vect1 * vect; // векторное произведение
+                Vector vectNoraml = face.NormVector;
 
-                int vectScalar = vectNoraml.X * proec.X + vectNoraml.Y * proec.Y + vectNoraml.Z * proec.Z; // скалярное произведение
 
-                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(proec.X * proec.X + proec.Y * proec.Y + proec.Z * proec.Z);
+                //int vectScalar = vectNoraml.X * vecProec.X + vectNoraml.Y * vecProec.Y + vectNoraml.Z * vecProec.Z; // скалярное произведение
+                int vectScalar = vectNoraml.X * vect.X + vectNoraml.Y * vect.Y + vectNoraml.Z * vect.Z; // скалярное произведение
 
-                var cos = 0.0;
-                if (len != 0)
-                    cos = vectScalar / len;
-                if (cos > 0)
+                //var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vecProec.X * vecProec.X + vecProec.Y * vecProec.Y + vecProec.Z * vecProec.Z);
+                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vect.X * vect.X + vect.Y * vect.Y + vect.Z * vect.Z);
+
+                cos = len != 0 ? vectScalar / len : 0;
+
+                if (cos < 0)
                     newShape.addFace(face);
             }
             return newShape;

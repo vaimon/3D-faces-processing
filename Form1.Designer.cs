@@ -46,7 +46,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rbPerspective = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.buttonPruneNonFacial = new System.Windows.Forms.Button();
+            this.checkBoxPruneNonFacial = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -265,22 +265,23 @@
             this.radioButton1.UseVisualStyleBackColor = false;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.rbParallel_CheckedChanged);
             // 
-            // buttonPruneNonFacial
+            // checkBoxPruneNonFacial
             // 
-            this.buttonPruneNonFacial.Location = new System.Drawing.Point(43, 784);
-            this.buttonPruneNonFacial.Name = "buttonPruneNonFacial";
-            this.buttonPruneNonFacial.Size = new System.Drawing.Size(239, 54);
-            this.buttonPruneNonFacial.TabIndex = 31;
-            this.buttonPruneNonFacial.Text = "Отсечь нелицевые";
-            this.buttonPruneNonFacial.UseVisualStyleBackColor = true;
-            this.buttonPruneNonFacial.Click += new System.EventHandler(this.buttonPruneNonFacial_Click);
+            this.checkBoxPruneNonFacial.AutoSize = true;
+            this.checkBoxPruneNonFacial.Location = new System.Drawing.Point(46, 676);
+            this.checkBoxPruneNonFacial.Name = "checkBoxPruneNonFacial";
+            this.checkBoxPruneNonFacial.Size = new System.Drawing.Size(242, 29);
+            this.checkBoxPruneNonFacial.TabIndex = 32;
+            this.checkBoxPruneNonFacial.Text = "Отсечь нелицевые грани";
+            this.checkBoxPruneNonFacial.UseVisualStyleBackColor = true;
+            this.checkBoxPruneNonFacial.CheckedChanged += new System.EventHandler(this.checkBoxPruneNonFacial_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1678, 944);
-            this.Controls.Add(this.buttonPruneNonFacial);
+            this.Controls.Add(this.checkBoxPruneNonFacial);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.rbPerspective);
             this.Controls.Add(this.groupBox1);
@@ -321,6 +322,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RadioButton rbPerspective;
         private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.Button buttonPruneNonFacial;
+        private System.Windows.Forms.CheckBox checkBoxPruneNonFacial;
     }
 }
