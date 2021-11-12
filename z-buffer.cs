@@ -93,7 +93,7 @@ namespace _3DFacesProcessing
             return res;
         }
         //растеризовать фигуру
-        public static List<List<Point>> RasterFigure(Shape figure)
+        public static List<List<Point>> RasterFigure(Shape figure,Camera camera)
         {
             List<List<Point>> res = new List<List<Point>>();
             foreach (var facet in figure.Faces)//каждая грань-это многоугольник, который надо растеризовать
@@ -109,13 +109,13 @@ namespace _3DFacesProcessing
                 List<List<Point>> triangles = Triangulate(points);//разбили все грани на треугольники
                 foreach (var triangle in triangles)
                 {
-                    currentface.AddRange(Raster(Projection(triangle)));//projection(triangle)
+                    currentface.AddRange(Raster(Projection(triangle,camera)));//projection(triangle)
                 }
                 res.Add(currentface);
             }
             return res;
         }
-        public static List<Point> Projection(List<Point> points)//Camera camera,ProjectionType type 
+        public static List<Point> Projection(List<Point> points,Camera camera)//Camera camera,ProjectionType type 
         {
             List<Point> res = new List<Point>();
             float c = 1000;
@@ -123,7 +123,8 @@ namespace _3DFacesProcessing
             foreach (var p in points)//потом заменить to2D(camera)
             {
                 // var current = p.to2D(camera);
-                var current = transformPoint(p, matrix);
+                //var current = transformPoint(p, matrix);
+                var current = camera.toCameraView(p);
                 res.Add(current);
             }
             return res;
@@ -141,7 +142,7 @@ namespace _3DFacesProcessing
 
         }
 
-        public static Bitmap z_buf(int width, int height, List<Shape> scene, List<Color> colors)
+        public static Bitmap z_buf(int width, int height, List<Shape> scene,Camera camera, List<Color> colors)
         {
             //Bitmap bitmap = new Bitmap(width, height);
             Bitmap canvas = new Bitmap(width, height);
@@ -158,7 +159,7 @@ namespace _3DFacesProcessing
             List<List<List<Point>>> rasterscene = new List<List<List<Point>>>();
             for (int i = 0; i < scene.Count(); i++)
             {
-                rasterscene.Add(RasterFigure(scene[i]));//растеризовали все фигуры
+                rasterscene.Add(RasterFigure(scene[i],camera));//растеризовали все фигуры
             }
             int withmiddle = width / 2;
             int heightmiddle = height / 2;

@@ -21,6 +21,7 @@ namespace _3DFacesProcessing
         public Form1()
         {
             sceneShapes = new BindingList<Shape>();
+            colorrange = GenerateColors();
             scene = new List<Shape>();
             InitializeComponent();
             listBox.DataSource = sceneShapes;
@@ -138,8 +139,8 @@ namespace _3DFacesProcessing
 
         private void z_buffer_Click(object sender, EventArgs e)
         {
-            colorrange = GenerateColors();
-            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,scene, colorrange);
+           // colorrange = GenerateColors();
+            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,scene, camera, colorrange);
             canvas.Image = bmp;
             canvas.Invalidate();
         }
