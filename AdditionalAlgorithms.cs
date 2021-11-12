@@ -129,11 +129,11 @@ namespace _3DFacesProcessing
             cameraRight = (cameraUp * cameraDirection).normalize();
         }
 
-        public void move(double shiftX = 0, double shiftY = 0, double shiftZ = 0)
+        public void move(double leftright = 0, double forwardbackward = 0, double updown = 0)
         {
-            cameraPosition.Xf += shiftX;
-            cameraPosition.Yf += shiftY;
-            cameraPosition.Zf += shiftZ;
+            cameraPosition.Xf += leftright * cameraRight.x + forwardbackward * cameraDirection.x + updown * cameraUp.x;
+            cameraPosition.Yf += leftright * cameraRight.y + forwardbackward * cameraDirection.y + updown * cameraUp.y;
+            cameraPosition.Zf += leftright * cameraRight.z + forwardbackward * cameraDirection.z + updown * cameraUp.z;
         }
 
         public Point toCameraView(Point p)

@@ -119,12 +119,12 @@ namespace _3DFacesProcessing
         {
             switch (e.KeyChar)
             {
-                case 'w': camera.move(shiftY: 5); break;
-                case 'a': camera.move(shiftX: -5); break;
-                case 's': camera.move(shiftY: -5); break;
-                case 'd': camera.move(shiftX: 5); break;
-                case 'q': camera.move(shiftZ: 5); break;
-                case 'e': camera.move(shiftZ: -5); break;
+                case 'w': camera.move(forwardbackward: 5); break;
+                case 'a': camera.move(leftright: -5); break;
+                case 's': camera.move(forwardbackward: -5); break;
+                case 'd': camera.move(leftright: 5); break;
+                case 'q': camera.move(updown: 5); break;
+                case 'e': camera.move(updown: -5); break;
                 case 'i': camera.changeView(shiftY: 2); break;
                 case 'j': camera.changeView(shiftX: -2); break;
                 case 'k': camera.changeView(shiftY: -2); break;

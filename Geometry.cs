@@ -110,7 +110,9 @@ namespace _3DFacesProcessing
             }
             else if (projection == ProjectionType.PERSPECTIVE)
             {
-                return null;
+                var eyeDistance = 200;
+                Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
+                return new PointF(worldCenter.X + (float)(res[0, 0]), worldCenter.Y + (float)(res[0, 1]));
             } else
             {
                 return to2D();
