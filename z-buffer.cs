@@ -19,7 +19,7 @@ namespace _3DFacesProcessing
             }
             double step = (y2 - y1) * 1.0f / (x2 - x1);//с таким шагом будем получать новые точки
             double y = y1;
-            for (int i = x1; i < x2; i++)
+            for (int i = x1; i <= x2; i++)
             {
                 res.Add((int)y);
                 y += step;
@@ -177,15 +177,17 @@ namespace _3DFacesProcessing
                 {
                     List<Point> current = rasterscene[i][j];//это типа грань но уже растеризованная
                     foreach (Point p in current)
-                    {
+                    { 
                         int x = (int)(p.X + withmiddle - figureCenterX);
-                        int y = (int)(p.Y + heightmiddle - figureCenterY);
+                       // int x = (int)(p.X);
+                         int y = (int)(p.Y + heightmiddle - figureCenterY);
+                       // int y = (int)(p.Y);
                         if (x < width && y < height && y > 0 && x > 0)
                         {
                             if (p.Z < zbuffer[x, y])
                             {
                                 zbuffer[x, y] = p.Z;
-                                canvas.SetPixel(x, y, colors[index % colors.Count()]);
+                                canvas.SetPixel(x, canvas.Height-y, colors[index % colors.Count()]);
                             }
 
                         }

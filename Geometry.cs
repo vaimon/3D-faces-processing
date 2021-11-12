@@ -45,7 +45,18 @@ namespace _3DFacesProcessing
             this.y = y;
             this.z = z;
         }
-
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Point objAsPart = obj as Point;
+            if (objAsPart == null) return false;
+            else return Equals(objAsPart);
+        }
+        public bool Equals(Point other)
+        {
+            if (other == null) return false;
+            return (this.X.Equals(other.X)&& this.Y.Equals(other.Y)&& this.Z.Equals(other.Z));
+        }
         public static void setProjection(Size screenSize, double zScreenNear, double zScreenFar, double fov)
         {
             Point.screenSize = screenSize;
@@ -410,7 +421,7 @@ namespace _3DFacesProcessing
         public static List<Point> Distinct<Point>(List<Point> l)
         {
             List<Point> uniq = new List<Point>();
-            foreach (var p in l)
+            foreach (Point p in l)
             {
                 if (!uniq.Contains(p))
                     uniq.Add(p);
