@@ -156,10 +156,11 @@ namespace _3DFacesProcessing
             return $"({X}, {Y}, {Z})";
         }
     }
-    /// <summary>
-    /// Отрезок в пространстве
-    /// </summary>
-    public class Line
+   
+        /// <summary>
+        /// Отрезок в пространстве
+        /// </summary>
+        public class Line
     {
         public Point start,end;
 
@@ -342,7 +343,7 @@ namespace _3DFacesProcessing
             Shape res = new Shape();
             StreamReader sr = new StreamReader(fileName);
             List<Line> edgs = new List<Line>();
-           
+            List<Point> verts=new List<Point>() ;
             // название фигуры
             string line = sr.ReadLine();
             if (line != null)
@@ -394,15 +395,28 @@ namespace _3DFacesProcessing
                     var endPoint = str[1].Split(','); // конец ребра
                     // добавляем новое ребро текущей грани
                     edgs.Add(new Line(new Point(int.Parse(startPoint[0]), int.Parse(startPoint[1]), int.Parse(startPoint[2])), new Point(int.Parse(endPoint[0]), int.Parse(endPoint[1]), int.Parse(endPoint[2]))));
+                    verts.Add(new Point(int.Parse(startPoint[0]), int.Parse(startPoint[1]), int.Parse(startPoint[2])));
+                    verts.Add(new Point(int.Parse(endPoint[0]), int.Parse(endPoint[1]), int.Parse(endPoint[2])));
                 }
-                res.addFace(new Face(edgs)); // добавляем целую грань фигуры
+                List<Point> v= Distinct(verts);
+                res.addFace(new Face(edgs).addVerticles(v)); // добавляем целую грань фигуры
                 edgs = new List<Line>();
+                verts.Clear();
                 line = sr.ReadLine();
             }
             sr.Close();
             return res;
         }
-
+        public static List<Point> Distinct<Point>(List<Point> l)
+        {
+            List<Point> uniq = new List<Point>();
+            foreach (var p in l)
+            {
+                if (!uniq.Contains(p))
+                    uniq.Add(p);
+            }
+            return uniq;
+        }
         // сохраняет модель многогранника в файл
         public void saveShape(string fileName)
         {
@@ -428,7 +442,7 @@ namespace _3DFacesProcessing
             return $"{getShapeName()} ({faces.Count})";
         }
     }
-
+   
     class Tetrahedron : Shape
     {
         public override String getShapeName()
