@@ -156,7 +156,7 @@ namespace _3DFacesProcessing
             Point center = new Point(sumX / shape.Faces.Count(), sumY / shape.Faces.Count(), sumZ / shape.Faces.Count());
 
             // вектор проекции
-            //Vector vecProec = new Vector(center) - vect;
+            Vector vecProec = new Vector(center) - vect;
 
             foreach (Face face in shape.Faces) // для каждой грани фигуры
             {
@@ -191,12 +191,10 @@ namespace _3DFacesProcessing
                 Vector vectNoraml = face.NormVector;
 
 
-                //int vectScalar = vectNoraml.X * vecProec.X + vectNoraml.Y * vecProec.Y + vectNoraml.Z * vecProec.Z; // скалярное произведение
-                int vectScalar = vectNoraml.X * vect.X + vectNoraml.Y * vect.Y + vectNoraml.Z * vect.Z; // скалярное произведение
-
-                //var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vecProec.X * vecProec.X + vecProec.Y * vecProec.Y + vecProec.Z * vecProec.Z);
-                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vect.X * vect.X + vect.Y * vect.Y + vect.Z * vect.Z);
-
+                int vectScalar = vectNoraml.X * vecProec.X + vectNoraml.Y * vecProec.Y + vectNoraml.Z * vecProec.Z; // скалярное произведение
+                
+                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vecProec.X * vecProec.X + vecProec.Y * vecProec.Y + vecProec.Z * vecProec.Z);
+                
                 cos = len != 0 ? vectScalar / len : 0;
 
                 if (cos < 0)
