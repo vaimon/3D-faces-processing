@@ -13,11 +13,15 @@ namespace _3DFacesProcessing
     public partial class Form1 : Form
     {
         BindingList<Shape> sceneShapes;
+        List<Shape> scene;
         bool isMoving = false;
         Camera camera;
+        List<Color> colorrange;
+
         public Form1()
         {
             sceneShapes = new BindingList<Shape>();
+            scene = new List<Shape>();
             InitializeComponent();
             listBox.DataSource = sceneShapes;
             canvas.Image = new Bitmap(canvas.Width, canvas.Height);
@@ -40,6 +44,7 @@ namespace _3DFacesProcessing
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 sceneShapes.Add(Shape.readShape(openFileDialog1.FileName));
+                scene.Add(Shape.readShape(openFileDialog1.FileName));
                 changeToolsAccessibility(true);
                 redrawScene();
             }
@@ -129,6 +134,14 @@ namespace _3DFacesProcessing
             redrawScene();
             //label7.Text = $"{camera.Location}";
             e.Handled = true;
+        }
+
+        private void z_buffer_Click(object sender, EventArgs e)
+        {
+            colorrange = GenerateColors();
+            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,scene, colorrange);
+            canvas.Image = bmp;
+            canvas.Invalidate();
         }
     }
 }

@@ -15,7 +15,7 @@ namespace _3DFacesProcessing
         Pen blackPen = new Pen(Color.Black, 3);
         Pen highlightPen = new Pen(Color.DarkRed, 3);
         FastBitmap fbitmap;
-
+        List<Color> rangecolors;
         private void btnShowAxis_Click(object sender, EventArgs e)
         {
             isAxisVisible = !isAxisVisible;
@@ -119,6 +119,15 @@ namespace _3DFacesProcessing
             //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
             fbitmap.Dispose();
             canvas.Image = bitmap;         
+        }
+        List<Color> GenerateColors()
+        {
+            List<Color> res = new List<Color>();
+           Random r;
+            r= new Random(Environment.TickCount);
+            for (int i = 0; i < 50; ++i)
+               res.Add(Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255)));
+            return res;
         }
     }
 }
