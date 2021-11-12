@@ -120,6 +120,7 @@ namespace _3DFacesProcessing
             fbitmap.Dispose();
             canvas.Image = bitmap;         
         }
+
     }
 }
 

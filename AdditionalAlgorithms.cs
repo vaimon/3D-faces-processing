@@ -110,6 +110,88 @@ namespace _3DFacesProcessing
             }
         }
 
+        // поиск нелицевых граней
+        Shape findNonFacial(Shape shape)
+        {
+            Shape newShape;
+            switch (shape.getShapeName())
+            {
+                case "TETRAHEDRON":
+                    newShape = new Tetrahedron();
+                    break;
+                case "HEXAHEDRON":
+                    newShape = new Hexahedron();
+                    break;
+                case "OCTAHEDRON":
+                    newShape = new Octahedron();
+                    break;
+                case "ICOSAHEDRON":
+                    newShape = new Icosahedron();
+                    break;
+                case "DODECAHEDRON":
+                    newShape = new Dodecahedron();
+                    break;
+                case "SURFACESEGMENT":
+                    newShape = new SurfaceSegment();
+                    break;
+                case "ROTATIONSHAPE":
+                    newShape = new RotationShape();
+                    break;
+                default:
+                    throw new Exception("Такой фигуры нет :с");
+            }
+
+            // пусть вектор обзора сейчас задается точкой (0,0,0) (пока не работает камера)
+            Vector vect = new Vector(0, 0, 0);
+
+            int sumX = 0, sumY = 0, sumZ = 0;
+            foreach (var face in shape.Faces)
+            {
+                sumX += face.getCenter().X;
+                sumY += face.getCenter().Y;
+                sumZ += face.getCenter().Z;
+            }
+            // центр фигуры
+            Point center = new Point(sumX / shape.Faces.Count(), sumY / shape.Faces.Count(), sumZ / shape.Faces.Count());
+
+            // вектор проекции
+            Vector proec = new Vector(center) - vect;
+
+            foreach (Face face in shape.Faces) // для каждой грани фигуры
+            {
+                // вектор одного ребра грани
+                int firstVecX = face.Edges[0].Start.X - face.Edges[0].End.X;
+                int firstVecY = face.Edges[0].Start.Y - face.Edges[0].End.Y;
+                int firstVecZ = face.Edges[0].Start.Z - face.Edges[0].End.Z;
+
+                // вектор второго ребра грани
+                int secondVecX = face.Edges[1].Start.X - face.Edges[1].End.X;
+                int secondVecY = face.Edges[1].Start.Y - face.Edges[1].End.Y;
+                int secondVecZ = face.Edges[1].Start.Z - face.Edges[1].End.Z;
+
+                // вектор третьего ребра грани
+                int thirdVecX = face.Edges[2].Start.X - face.Edges[2].End.X;
+                int thirdVecY = face.Edges[2].Start.Y - face.Edges[2].End.Y;
+                int thirdVecZ = face.Edges[2].Start.Z - face.Edges[2].End.Z;
+
+                Vector vect1 = new Vector(firstVecX - secondVecX, firstVecY - secondVecY, firstVecZ - secondVecZ);
+                Vector vect2 = new Vector(secondVecX - thirdVecX, secondVecY - thirdVecY, secondVecZ - thirdVecZ);
+
+                // вектор нормали грани 
+                Vector vectNoraml = vect1 * vect; // векторное произведение
+
+                int vectScalar = vectNoraml.X * proec.X + vectNoraml.Y * proec.Y + vectNoraml.Z * proec.Z; // скалярное произведение
+
+                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(proec.X * proec.X + proec.Y * proec.Y + proec.Z * proec.Z);
+
+                var cos = 0.0;
+                if (len != 0)
+                    cos = vectScalar / len;
+                if (cos > 0)
+                    newShape.addFace(face);
+            }
+            return newShape;
+        }
     }
 
     public class Camera

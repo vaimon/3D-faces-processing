@@ -197,5 +197,6 @@ namespace _3DFacesProcessing
 
             drawShape(currentShape);
         }
+
     }
 }

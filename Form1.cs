@@ -14,6 +14,7 @@ namespace _3DFacesProcessing
     {
         BindingList<Shape> sceneShapes;
         bool isMoving = false;
+        bool pruneNonFacial = false;
         Camera camera;
         public Form1()
         {
@@ -129,6 +130,11 @@ namespace _3DFacesProcessing
             redrawScene();
             //label7.Text = $"{camera.Location}";
             e.Handled = true;
+        }
+
+        private void buttonPruneNonFacial_Click(object sender, EventArgs e)
+        {
+            pruneNonFacial = true;
         }
     }
 }
