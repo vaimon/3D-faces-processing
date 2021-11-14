@@ -125,7 +125,7 @@ namespace _3DFacesProcessing
             if (projection == ProjectionType.PARALLEL) {
                 if (viewCoord.Z > 0)
                 {
-                    return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf),0);
+                    return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf),this.Z);
                 }
                 return null;
             }
@@ -133,7 +133,7 @@ namespace _3DFacesProcessing
             {
                 if(viewCoord.Zf < 0)
                 {
-                    return Tuple.Create<PointF?, double>(null,0);
+                    return Tuple.Create<PointF?, double>(null,this.Z);
                 }
                 //var eyeDistance = 200;
                 //Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
@@ -141,7 +141,7 @@ namespace _3DFacesProcessing
                 Matrix res = new Matrix(1, 4).fill(viewCoord.Xf, viewCoord.Yf, viewCoord.Zf, 1) * perspectiveProjectionMatrix;
                 if(res[0,3] == 0)
                 {
-                    return Tuple.Create<PointF?, double>(null,0);
+                    return Tuple.Create<PointF?, double>(null,this.Z);
                     //return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
                 }
                 res *= 1.0 / res[0, 3];
@@ -150,12 +150,12 @@ namespace _3DFacesProcessing
                 //res[0, 2] = Math.Clamp(res[0, 2], -1, 1);
                 if(res[0,2] < 0)
                 {
-                    return Tuple.Create<PointF?, double>(null,0);
+                    return Tuple.Create<PointF?, double>(null, this.Z);
                 }
-                return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y),res[0,2]);
+                return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y),this.Z);
             } else
             {
-                return Tuple.Create<PointF?,double>(to2D(),-1);
+                return Tuple.Create<PointF?,double>(to2D(),this.Z);
             }
             //else
             //{

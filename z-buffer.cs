@@ -200,7 +200,7 @@ namespace _3DFacesProcessing
                         int y = (int)(p.Y);
                         if (x < width && y < height && y > 0 && x > 0)
                         {
-                            if (p.Z < zbuffer[x, y])
+                            if (p.Z <zbuffer[x, y])
                             {
                                 zbuffer[x, y] = p.Z;
                                 canvas.SetPixel(x, y, colors[index % colors.Count()]);//Canvas.Width-x
