@@ -177,12 +177,12 @@ namespace _3DFacesProcessing
             for (int i = 0; i < rasterscene.Count(); i++)
             {
                 //Смещение по центру фигуры
-                //var figureLeftX = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.X));
-                //var figureLeftY = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.Y));
+              // var figureLeftX = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.X));
+               // var figureLeftY = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.Y));
                 //var figureRightX = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.X));
-                //var figureRightY = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.Y));
+               // var figureRightY = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.Y));
                 //var figureCenterX = (figureRightX - figureLeftX) / 2;
-                //var figureCenterY = (figureRightY - figureLeftY) / 2;
+               // var figureCenterY = (figureRightY - figureLeftY) / 2;
                 for (int j = 0; j < rasterscene[i].Count(); j++)
                 {
                     List<Point> current = rasterscene[i][j];//это типа грань но уже растеризованная
@@ -199,7 +199,7 @@ namespace _3DFacesProcessing
                             if (p.Z < zbuffer[x, y])
                             {
                                 zbuffer[x, y] = p.Z;
-                                canvas.SetPixel(x, canvas.Height-y, colors[index % colors.Count()]);
+                                canvas.SetPixel(x, canvas.Height-y, colors[index % colors.Count()]);//Canvas.Width-x
                             }
 
                         }
