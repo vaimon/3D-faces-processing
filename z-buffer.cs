@@ -123,10 +123,14 @@ namespace _3DFacesProcessing
             //Matrix matrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1 / c, 0, 0, 0, 1);//перспективная чисто для начала
             foreach (var p in points)//потом заменить to2D(camera)
             {
-                // var current = p.to2D(camera);
-                //var current = transformPoint(p, matrix);
-                var current = camera.toCameraView(p);
-                res.Add(current);
+               var current = p.to2D(camera);
+                if (current.Item1 != null)
+                {
+                    Point newpoint = new Point(current.Item1.Value.X, current.Item1.Value.Y,current.Item2);
+                    //var current = transformPoint(p, matrix);
+                    // var current = camera.toCameraView(p);
+                    res.Add(newpoint);
+                }
             }
             return res;
 
@@ -189,17 +193,17 @@ namespace _3DFacesProcessing
                     foreach (Point p in current)
                     {
                         // int x = (int)(p.X + withmiddle - figureCenterX);
-                         int x = (int)(p.X+withmiddle);
-                        
+                        // int x = (int)(p.X+withmiddle);
+                        int x = (int)(p.X);
                         //int y = (int)(p.Y + heightmiddle - figureCenterY);
-                         int y = (int)(p.Y+heightmiddle);
-                       
+                         //int y = (int)(p.Y+heightmiddle);
+                        int y = (int)(p.Y);
                         if (x < width && y < height && y > 0 && x > 0)
                         {
                             if (p.Z < zbuffer[x, y])
                             {
                                 zbuffer[x, y] = p.Z;
-                                canvas.SetPixel(x, canvas.Height-y, colors[index % colors.Count()]);//Canvas.Width-x
+                                canvas.SetPixel(x, y, colors[index % colors.Count()]);//Canvas.Width-x
                             }
 
                         }

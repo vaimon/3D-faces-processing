@@ -141,7 +141,7 @@ namespace _3DFacesProcessing
         private void z_buffer_Click(object sender, EventArgs e)
         {
             // colorrange = GenerateColors();
-             Shape s = Z_buffer.ToCamera(scene[0], camera);
+            // Shape s = Z_buffer.ToCamera(scene[0], camera);
             // sceneShapes.RemoveAt(0);
             //sceneShapes.Add(s);
             // redrawScene();
