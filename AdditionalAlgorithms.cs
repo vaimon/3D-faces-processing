@@ -113,8 +113,9 @@ namespace _3DFacesProcessing
         // поиск нелицевых граней
         Shape findNonFacial(Shape shape, Camera camera)
         {
+
             Shape newShape;
-            double cos = 0.0;
+            //double cos = 0.0;
             switch (shape.getShapeName())
             {
                 case "TETRAHEDRON":
@@ -143,7 +144,7 @@ namespace _3DFacesProcessing
             }
 
             // вектор обзора
-            Vector vect = camera.cameraDirection;
+            Vector vect = new Vector(camera.cameraPosition);
 
             int sumX = 0, sumY = 0, sumZ = 0;
             foreach (var face in shape.Faces)
@@ -152,50 +153,21 @@ namespace _3DFacesProcessing
                 sumY += face.getCenter().Y;
                 sumZ += face.getCenter().Z;
             }
-            // центр фигуры
-            Point center = new Point(sumX / shape.Faces.Count(), sumY / shape.Faces.Count(), sumZ / shape.Faces.Count());
 
-            // вектор проекции
-            Vector vecProec = new Vector(center) - vect;
+            // центр фигуры
+            Point centerFig = new Point(sumX / shape.Faces.Count(), sumY / shape.Faces.Count(), sumZ / shape.Faces.Count());
 
             foreach (Face face in shape.Faces) // для каждой грани фигуры
             {
-                // вектор одного ребра грани
-                /* int firstVecX = face.Edges[0].End.X - face.Edges[0].Start.X;
-                 int firstVecY = face.Edges[0].End.Y - face.Edges[0].Start.Y;
-                 int firstVecZ = face.Edges[0].End.Z - face.Edges[0].Start.Z;*/
-
-                // вектор второго ребра грани
-                /* int secondVecX = face.Edges[1].Start.X - face.Edges[1].End.X;
-                 int secondVecY = face.Edges[1].Start.Y - face.Edges[1].End.Y;
-                 int secondVecZ = face.Edges[1].Start.Z - face.Edges[1].End.Z;*/
-                /* int secondVecX = face.Edges[face.Edges.Count() - 1].Start.X - face.Edges[face.Edges.Count() - 1].End.X;
-                 int secondVecY = face.Edges[face.Edges.Count() - 1].Start.Y - face.Edges[face.Edges.Count() - 1].End.Y;
-                 int secondVecZ = face.Edges[face.Edges.Count() - 1].Start.Z - face.Edges[face.Edges.Count() - 1].End.Z;*/
-
-                // вектор третьего ребра грани
-                /*  int thirdVecX = face.Edges[2].End.X - face.Edges[2].Start.X;
-                  int thirdVecY = face.Edges[2].End.Y - face.Edges[2].Start.Y;
-                  int thirdVecZ = face.Edges[2].End.Z - face.Edges[2].Start.Z;*/
-                /* int thirdVecX = face.Edges[face.Edges.Count() - 1].Start.X - face.Edges[face.Edges.Count() - 1].End.X;
-                 int thirdVecY = face.Edges[face.Edges.Count() - 1].Start.Y - face.Edges[face.Edges.Count() - 1].End.Y;
-                 int thirdVecZ = face.Edges[face.Edges.Count() - 1].Start.Z - face.Edges[face.Edges.Count() - 1].End.Z;*/
-
-                //Vector vect1 = new Vector(firstVecX - secondVecX, firstVecY - secondVecY, firstVecZ - secondVecZ);
-                //Vector vect2 = new Vector(secondVecX - thirdVecX, secondVecY - thirdVecY, secondVecZ - thirdVecZ);
-                //Vector vect1 = new Vector(firstVecX, firstVecY, firstVecZ);
-                //Vector vect2 = new Vector(secondVecX, secondVecY, secondVecZ);
-
                 // вектор нормали грани 
-                //Vector vectNoraml = vect1 * vect; // векторное произведение
                 Vector vectNoraml = face.NormVector;
 
+                Vector center = new Vector(centerFig.X - face.getCenter().X, centerFig.Y - face.getCenter().Y, centerFig.Z - face.getCenter().Z, true);
 
-                int vectScalar = vectNoraml.X * vecProec.X + vectNoraml.Y * vecProec.Y + vectNoraml.Z * vecProec.Z; // скалярное произведение
-                
-                var len = Math.Sqrt(vectNoraml.X * vectNoraml.X + vectNoraml.Y * vectNoraml.Y + vectNoraml.Z * vectNoraml.Z) * Math.Sqrt(vecProec.X * vecProec.X + vecProec.Y * vecProec.Y + vecProec.Z * vecProec.Z);
-                
-                cos = len != 0 ? vectScalar / len : 0;
+                // вектор проекции
+                Vector vectProec = new Vector(center.X - vect.X, center.Y - vect.Y, center.Z - vect.Z);
+
+                int cos = vectNoraml.X * vectProec.X + vectNoraml.Y * vectProec.Y + vectNoraml.Z * vectProec.Z;
 
                 if (cos < 0)
                     newShape.addFace(face);
