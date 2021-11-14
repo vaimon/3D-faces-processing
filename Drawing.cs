@@ -66,8 +66,8 @@ namespace _3DFacesProcessing
             //    pf1 = line.Start.to2D();
             //    pf2 = line.End.to2D();
             //}
-            pf1 = line.Start.to2D(camera);
-            pf2 = line.End.to2D(camera);
+            pf1 = line.Start.to2D(camera).Item1;
+            pf2 = line.End.to2D(camera).Item1;
             if(pf1.HasValue && pf2.HasValue)
             {
                 drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(pf2.Value.Y)), pen.Color);

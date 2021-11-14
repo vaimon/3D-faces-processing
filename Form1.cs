@@ -30,7 +30,7 @@ namespace _3DFacesProcessing
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
             Point.projection = ProjectionType.PERSPECTIVE;
-            Point.setProjection(canvas.Size, 1, 100, 90);
+            Point.setProjection(canvas.Size, 1, 100, 45);
         }
 
         private void button1_Click(object sender, EventArgs e)
