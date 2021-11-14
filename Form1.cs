@@ -44,8 +44,9 @@ namespace _3DFacesProcessing
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                sceneShapes.Add(Shape.readShape(openFileDialog1.FileName));
-                scene.Add(Shape.readShape(openFileDialog1.FileName));
+                Shape s = Shape.readShape(openFileDialog1.FileName);
+                sceneShapes.Add(s);
+                scene.Add(s);
                 changeToolsAccessibility(true);
                 redrawScene();
             }
@@ -139,9 +140,21 @@ namespace _3DFacesProcessing
 
         private void z_buffer_Click(object sender, EventArgs e)
         {
-           // colorrange = GenerateColors();
-            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,scene, camera, colorrange);
-            canvas.Image = bmp;
+            // colorrange = GenerateColors();
+            // Shape s = Z_buffer.ToCamera(scene[0], camera);
+            // sceneShapes.RemoveAt(0);
+            //sceneShapes.Add(s);
+            // redrawScene();
+            //
+
+            // drawShape(s, highlightPen);
+            List<Shape> l = sceneShapes.ToList();
+            //canvas.Image = new Bitmap(canvas.Width, canvas.Height);
+           // sceneShapes.Clear();
+           // sceneShapes.Add(l[0]);
+           // redrawScene();
+             Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,l, camera, colorrange);
+             canvas.Image = bmp;
             canvas.Invalidate();
         }
     }

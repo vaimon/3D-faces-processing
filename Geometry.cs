@@ -413,6 +413,7 @@ namespace _3DFacesProcessing
                 res.addFace(new Face(edgs).addVerticles(v)); // добавляем целую грань фигуры
                 edgs = new List<Line>();
                 verts.Clear();
+                v.Clear();
                 line = sr.ReadLine();
             }
             sr.Close();

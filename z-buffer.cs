@@ -110,6 +110,7 @@ namespace _3DFacesProcessing
                 foreach (var triangle in triangles)
                 {
                     currentface.AddRange(Raster(Projection(triangle,camera)));//projection(triangle)
+                    //currentface.AddRange(Raster(triangle));
                 }
                 res.Add(currentface);
             }
@@ -118,8 +119,8 @@ namespace _3DFacesProcessing
         public static List<Point> Projection(List<Point> points,Camera camera)//Camera camera,ProjectionType type 
         {
             List<Point> res = new List<Point>();
-            float c = 1000;
-            Matrix matrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1 / c, 0, 0, 0, 1);//перспективная чисто для начала
+           // float c = 1000;
+            //Matrix matrix = new Matrix(4, 4).fill(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, -1 / c, 0, 0, 0, 1);//перспективная чисто для начала
             foreach (var p in points)//потом заменить to2D(camera)
             {
                 // var current = p.to2D(camera);
@@ -129,6 +130,15 @@ namespace _3DFacesProcessing
             }
             return res;
 
+        }
+        public static Shape ToCamera(Shape figure, Camera c)
+        {
+            Shape res = new Shape();
+            foreach (var face in figure.Faces)
+            {
+                res.addFace(new Face().addVerticles(Projection(face.Verticles, c)).addEdge(new Line(face.Verticles[0], face.Verticles[1])).addEdge(new Line(face.Verticles[1], face.Verticles[2])).addEdge(new Line(face.Verticles[2], face.Verticles[3])).addEdge(new Line(face.Verticles[3], face.Verticles[1])));
+            }
+            return res;
         }
         public static Point transformPoint(Point p, Matrix matrix)
 
@@ -167,21 +177,23 @@ namespace _3DFacesProcessing
             for (int i = 0; i < rasterscene.Count(); i++)
             {
                 //Смещение по центру фигуры
-                var figureLeftX = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.X));
-                var figureLeftY = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.Y));
-                var figureRightX = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.X));
-                var figureRightY = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.Y));
-                var figureCenterX = (figureRightX - figureLeftX) / 2;
-                var figureCenterY = (figureRightY - figureLeftY) / 2;
+                //var figureLeftX = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.X));
+                //var figureLeftY = rasterscene[i].Where(face => face.Count != 0).Min(face => face.Min(vertex => vertex.Y));
+                //var figureRightX = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.X));
+                //var figureRightY = rasterscene[i].Where(face => face.Count != 0).Max(face => face.Max(vertex => vertex.Y));
+                //var figureCenterX = (figureRightX - figureLeftX) / 2;
+                //var figureCenterY = (figureRightY - figureLeftY) / 2;
                 for (int j = 0; j < rasterscene[i].Count(); j++)
                 {
                     List<Point> current = rasterscene[i][j];//это типа грань но уже растеризованная
                     foreach (Point p in current)
-                    { 
-                        int x = (int)(p.X + withmiddle - figureCenterX);
-                       // int x = (int)(p.X);
-                         int y = (int)(p.Y + heightmiddle - figureCenterY);
-                       // int y = (int)(p.Y);
+                    {
+                        // int x = (int)(p.X + withmiddle - figureCenterX);
+                         int x = (int)(p.X+withmiddle);
+                        
+                        //int y = (int)(p.Y + heightmiddle - figureCenterY);
+                         int y = (int)(p.Y+heightmiddle);
+                       
                         if (x < width && y < height && y > 0 && x > 0)
                         {
                             if (p.Z < zbuffer[x, y])

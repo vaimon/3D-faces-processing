@@ -126,7 +126,7 @@ namespace _3DFacesProcessing
            Random r;
             r= new Random(Environment.TickCount);
             for (int i = 0; i < 50; ++i)
-               res.Add(Color.FromArgb(r.Next(0, 255), r.Next(0, 255), r.Next(0, 255)));
+               res.Add(Color.FromArgb(r.Next(0, 255), 0, 0));
             return res;
         }
     }
