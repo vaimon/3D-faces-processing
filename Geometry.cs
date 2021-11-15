@@ -504,7 +504,8 @@ namespace _3DFacesProcessing
         Line axiz;
         int Divisions;
         List<Point> allpoints;
-        List<Line> edges;//ребра
+        List<Line> edges;
+        List<Line> edges1=new List<Line>();//ребра
         public RotationShape()
         {
             allpoints = new List<Point>();
@@ -861,8 +862,8 @@ namespace _3DFacesProcessing
             //Line axis;
             int Count = divisions;
             double angle = (360.0 / Count);//угол
-            List<Line> edges;//ребра
-
+            List<Line> edges1=new List<Line>();//дно и верхушка
+            List<Line> edges2 = new List<Line>();//
             res.addPoints(genline);//добавили образующую
             for (int i = 1; i < divisions; i++)//количество разбиений
             {
@@ -893,14 +894,18 @@ namespace _3DFacesProcessing
                             int e1 = (index + 1 + GeneralCount) % res.Points.Count;
                             //добавим грань
                             res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
+                            edges1.Add(new Line(res.Points[index], res.Points[e1]));
+                             edges2.Add(new Line(res.Points[index+1], res.Points[e]));
                         }
+
                     }
 
                 }
 
 
             }
-
+            res.addFace(new Face().addEdges(edges1));
+            res.addFace(new Face().addEdges(edges2));
             return res;
         }
 
