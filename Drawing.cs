@@ -120,11 +120,15 @@ namespace _3DFacesProcessing
             fbitmap.Dispose();
             canvas.Image = bitmap;         
         }
+        /// <summary>
+        /// Генерирует множество цветов
+        /// </summary>
+      
         List<Color> GenerateColors()
         {
             List<Color> res = new List<Color>();
            Random r;
-            r= new Random(Environment.TickCount);
+            r= new Random();//Environment.TickCount
             for (int i = 0; i < 50; ++i)
                res.Add(Color.FromArgb(r.Next(0, 255), r.Next(0, 100), r.Next(60, 255)));
             return res;

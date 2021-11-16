@@ -10,6 +10,13 @@ namespace _3DFacesProcessing
 { using FastBitmap;
     class Z_buffer
     {
+        /// <summary>
+        /// Интерполяция точек
+        /// </summary>
+        /// <param name="x1">Стартовая точка</param>
+        /// <param name="y1">Стартовая точка</param>
+        /// <param name="x2">Конечная точка</param>
+        /// <param name="y2">Конечная линии</param>
         public static List<int> interpolate(int x1, int y1, int x2, int y2)
         {
             List<int> res = new List<int>();
@@ -27,6 +34,10 @@ namespace _3DFacesProcessing
             return res;
         }
         //растеризация треугольника
+        /// <summary>
+        /// Растеризация треугольника
+        /// </summary>
+        /// <param name="points">Список вершин треугольника</param>
         public static List<Point> Raster(List<Point> points)
         {
             List<Point> res = new List<Point>();
@@ -78,6 +89,10 @@ namespace _3DFacesProcessing
             return res;
         }
         //разбиение на треугольники
+        /// <summary>
+        /// Разбиение полигона на треугольники
+        /// </summary>
+        /// <param name="points">Список вершин треугольника</param>
         public static List<List<Point>> Triangulate(List<Point> points)
         {
             //если всего 3 точки, то это уже трекгольник
@@ -93,30 +108,40 @@ namespace _3DFacesProcessing
             return res;
         }
         //растеризовать фигуру
+        /// <summary>
+        /// Растеризация фигуры
+        /// </summary>
+        /// <param name="figure">Фигура</param>
+        /// <param name="camera">Камера</param>
         public static List<List<Point>> RasterFigure(Shape figure,Camera camera)
         {
             List<List<Point>> res = new List<List<Point>>();
-            foreach (var facet in figure.Faces)//каждая грань-это многоугольник, который надо растеризовать
+            foreach (var polygon in figure.Faces)//каждая грань-это многоугольник, который надо растеризовать
             {
                 List<Point> currentface = new List<Point>();
                 List<Point> points = new List<Point>();
                 //добавим все вершины
-                for (int i = 0; i < facet.Verticles.Count(); i++)
+                for (int i = 0; i < polygon.Verticles.Count(); i++)
                 {
-                    points.Add(facet.Verticles[i]);
+                    points.Add(polygon.Verticles[i]);
                 }
 
                 List<List<Point>> triangles = Triangulate(points);//разбили все грани на треугольники
                 foreach (var triangle in triangles)
                 {
-                    currentface.AddRange(Raster(Projection(triangle,camera)));//projection(triangle)
+                    currentface.AddRange(Raster(ProjectionToPlane(triangle,camera)));//projection(triangle)
                     //currentface.AddRange(Raster(triangle));
                 }
                 res.Add(currentface);
             }
             return res;
         }
-        public static List<Point> Projection(List<Point> points,Camera camera)//Camera camera,ProjectionType type 
+        /// <summary>
+        /// Проецирование точек на экран с учетом камеры и вида проекции
+        /// </summary>
+        /// <param name="points">Список точек</param>
+        /// <param name="camera">Камера</param>
+        public static List<Point> ProjectionToPlane(List<Point> points,Camera camera)//Camera camera,ProjectionType type 
         {
             List<Point> res = new List<Point>();
            // float c = 1000;
@@ -135,16 +160,25 @@ namespace _3DFacesProcessing
             }
             return res;
 
-        }
+        }/// <summary>
+         /// Перевод фигуры в то, как ее видит камера
+         /// </summary>
+         /// <param name="figure">Фигура</param>
+         /// <param name="c">Камера</param>
         public static Shape ToCamera(Shape figure, Camera c)
         {
             Shape res = new Shape();
             foreach (var face in figure.Faces)
             {
-                res.addFace(new Face().addVerticles(Projection(face.Verticles, c)).addEdge(new Line(face.Verticles[0], face.Verticles[1])).addEdge(new Line(face.Verticles[1], face.Verticles[2])).addEdge(new Line(face.Verticles[2], face.Verticles[3])).addEdge(new Line(face.Verticles[3], face.Verticles[1])));
+                res.addFace(new Face().addVerticles(ProjectionToPlane(face.Verticles, c)).addEdge(new Line(face.Verticles[0], face.Verticles[1])).addEdge(new Line(face.Verticles[1], face.Verticles[2])).addEdge(new Line(face.Verticles[2], face.Verticles[3])).addEdge(new Line(face.Verticles[3], face.Verticles[1])));
             }
             return res;
         }
+        /// <summary>
+        /// Перевод координат точки согласно матрице
+        /// </summary>
+        /// <param name="p">Точка</param>
+        /// <param name="matrix">Матрица перевода</param>
         public static Point transformPoint(Point p, Matrix matrix)
 
         {
@@ -156,7 +190,14 @@ namespace _3DFacesProcessing
             return newPoint;
 
         }
-
+        /// <summary>
+        /// Алгоритм z-буфера
+        /// </summary>
+        /// <param name="width">Ширина канваса</param>
+        /// <param name="height">Высота канваса</param>
+        /// <param name="scene">Множество фигур на сцене</param>
+        /// <param name="camera">Камера</param>
+        /// <param name="colors">Список цветов</param>
         public static Bitmap z_buf(int width, int height, List<Shape> scene,Camera camera, List<Color> colors)
         {
            
