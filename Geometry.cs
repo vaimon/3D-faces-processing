@@ -647,10 +647,10 @@ namespace _3DFacesProcessing
             Point c = new Point(200, 0, 200);
             Point f = new Point(200, 200, 0);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, c)).addEdge(new Line(c, a)));
-            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f)));
-            res.addFace(new Face().addEdge(new Line(c, h)).addEdge(new Line(h, a)).addEdge(new Line(a, c)));
-            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f)));
+            res.addFace(new Face().addEdge(new Line(a, c)).addEdge(new Line(c, f)).addEdge(new Line(f, a))); // 
+            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f))); // ok
+            res.addFace(new Face().addEdge(new Line(a, h)).addEdge(new Line(h, c)).addEdge(new Line(c, a))); // ok
+            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f))); // ok
             return res;
         }
 
@@ -883,9 +883,9 @@ namespace _3DFacesProcessing
             return this;
         }
 
-        public int X { get => (int)x; set => x = value; }
-        public int Y { get => (int)y; set => y = value; }
-        public int Z { get => (int)z; set => z = value; }
+        public double X { get => (int)x; set => x = value; }
+        public double Y { get => (int)y; set => y = value; }
+        public double Z { get => (int)z; set => z = value; }
 
         public static Vector operator -(Vector v1, Vector v2)
         {
