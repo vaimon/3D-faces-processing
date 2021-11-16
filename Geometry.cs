@@ -123,9 +123,9 @@ namespace _3DFacesProcessing
             var viewCoord = cam.toCameraView(this);
         
             if (projection == ProjectionType.PARALLEL) {
-                if (viewCoord.Z > 0)
+                if (viewCoord.Zf > 0)
                 {
-                    return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf),this.Z);
+                    return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf), (float)this.Zf);
                 }
                 return null;
             }
@@ -133,7 +133,7 @@ namespace _3DFacesProcessing
             {
                 if(viewCoord.Zf < 0)
                 {
-                    return Tuple.Create<PointF?, double>(null,this.Z);
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                 }
                 //var eyeDistance = 200;
                 //Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
@@ -141,7 +141,7 @@ namespace _3DFacesProcessing
                 Matrix res = new Matrix(1, 4).fill(viewCoord.Xf, viewCoord.Yf, viewCoord.Zf, 1) * perspectiveProjectionMatrix;
                 if(res[0,3] == 0)
                 {
-                    return Tuple.Create<PointF?, double>(null,this.Z);
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                     //return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
                 }
                 res *= 1.0 / res[0, 3];
@@ -150,12 +150,12 @@ namespace _3DFacesProcessing
                 //res[0, 2] = Math.Clamp(res[0, 2], -1, 1);
                 if(res[0,2] < 0)
                 {
-                    return Tuple.Create<PointF?, double>(null, this.Z);
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                 }
-                return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y),this.Z);
+                return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y), (float)this.Zf);
             } else
             {
-                return Tuple.Create<PointF?,double>(to2D(),this.Z);
+                return Tuple.Create<PointF?,double>(to2D(), (float)this.Zf);
             }
             //else
             //{
@@ -864,6 +864,8 @@ namespace _3DFacesProcessing
             double angle = (360.0 / Count);//угол
             List<Line> edges1=new List<Line>();//дно и верхушка
             List<Line> edges2 = new List<Line>();//
+            List<Point> v = new List<Point>();
+            List<Point> v1 = new List<Point>();
             res.addPoints(genline);//добавили образующую
             for (int i = 1; i < divisions; i++)//количество разбиений
             {
@@ -894,8 +896,10 @@ namespace _3DFacesProcessing
                             int e1 = (index + 1 + GeneralCount) % res.Points.Count;
                             //добавим грань
                             res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
-                            edges1.Add(new Line(res.Points[index], res.Points[e1]));
-                             edges2.Add(new Line(res.Points[index+1], res.Points[e]));
+                            edges1.Add(new Line(res.Points[index], res.Points[e1]));//res.Points[index], res.Points[e1])
+                            v.AddRange(new List<Point> { res.Points[index], res.Points[e1] });
+                            edges2.Add(new Line(res.Points[index + 1], res.Points[e]));//res.Points[index+1], res.Points[e]
+                            v1.AddRange(new List<Point> { res.Points[index+1], res.Points[e] });
                         }
 
                     }
@@ -904,8 +908,8 @@ namespace _3DFacesProcessing
 
 
             }
-            res.addFace(new Face().addEdges(edges1));
-            res.addFace(new Face().addEdges(edges2));
+            res.addFace(new Face().addEdges(edges1).addVerticles(v));
+            res.addFace(new Face().addEdges(edges2).addVerticles(v1));
             return res;
         }
 
