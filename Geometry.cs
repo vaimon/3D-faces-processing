@@ -883,9 +883,9 @@ namespace _3DFacesProcessing
             return this;
         }
 
-        public double X { get => (int)x; set => x = value; }
-        public double Y { get => (int)y; set => y = value; }
-        public double Z { get => (int)z; set => z = value; }
+        public double X { get => x; set => x = value; }
+        public double Y { get => y; set => y = value; }
+        public double Z { get => z; set => z = value; }
 
         public static Vector operator -(Vector v1, Vector v2)
         {

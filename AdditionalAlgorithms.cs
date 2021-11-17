@@ -266,34 +266,34 @@ namespace _3DFacesProcessing
 
             foreach (Face face in shape.Faces) // для каждой грани фигуры
             {
-                Vector vectProec = new Vector(camera.toCameraView(face.getCenter()));
+                Vector vectProec = new Vector(camera.toCameraView(face.getCenter())).normalize();
                 //Point center = face.getCenter();
                 // вектор проекции
                 //Vector proec = new Vector(center);
                 //proec = new Vector(camera.toCameraView(new Point(proec.X, proec.Y, proec.Z)));
 
-                double xx = vectProec.X, yy = vectProec.Y, zz = vectProec.Z;
-                double normalizationP = Math.Sqrt(Math.Pow(xx, 2) + Math.Pow(yy, 2) + Math.Pow(zz, 2));
-                xx = xx / normalizationP;
-                yy = yy / normalizationP;
-                zz = zz / normalizationP;
-                if (xx < 1 && yy < 1 && zz < 1)
-                {
-                    if (yy == Math.Max(xx, yy))
-                    {
-                        if (yy == Math.Max(zz, yy))
-                            yy = 1;
-                        else
-                            zz = 1;
-                    }
-                    else if (xx == Math.Max(xx, zz))
-                        xx = 1;
-                    else
-                        zz = 1;
-                }
-                vectProec.X = xx;
-                vectProec.Y = yy;
-                vectProec.Z = zz;
+                /*         double xx = vectProec.X, yy = vectProec.Y, zz = vectProec.Z;
+                         double normalizationP = Math.Sqrt(Math.Pow(xx, 2) + Math.Pow(yy, 2) + Math.Pow(zz, 2));
+                         xx = xx / normalizationP;
+                         yy = yy / normalizationP;
+                         zz = zz / normalizationP;
+                         if (xx < 1 && yy < 1 && zz < 1)
+                         {
+                             if (yy == Math.Max(xx, yy))
+                             {
+                                 if (yy == Math.Max(zz, yy))
+                                     yy = 1;
+                                 else
+                                     zz = 1;
+                             }
+                             else if (xx == Math.Max(xx, zz))
+                                 xx = 1;
+                             else
+                                 zz = 1;
+                         }
+                         vectProec.X = xx;
+                         vectProec.Y = yy;
+                         vectProec.Z = zz;*/
 
                 // вектор одного ребра грани
                 //int firstVecX = face.Edges[0].Start.X - face.Edges[0].End.X;
@@ -308,35 +308,42 @@ namespace _3DFacesProcessing
                 // вектор нормали грани 
                 //Vector vectNoraml = (vect2 * vect1).normalize(); // векторное произведение
 
-                Vector vect1 = new Vector(camera.toCameraView(face.Edges.First().getVectorCoordinates()));
+             /* вариант 1
+               Vector vect1 = new Vector(camera.toCameraView(face.Edges.First().getVectorCoordinates()));
                 Vector vect2 = new Vector(camera.toCameraView(face.Edges.Last().getReverseVectorCoordinates()));
+                Vector vectNormal = (vect2 * vect1).normalize2();
+             */
 
-                //Vector vect1 = new Vector(camera.toCameraView(face.Edges.First().getVectorCoordinates()));
-                //Vector vect2 = new Vector(camera.toCameraView(face.Edges.Last().getReverseVectorCoordinates()));
-                Vector vectNormal = vect2 * vect1;
+                /* вариант 2 */
+                Vector vect1 = new Vector(face.Edges.First().getVectorCoordinates());
+                Vector vect2 = new Vector(face.Edges.Last().getReverseVectorCoordinates());          
+                Vector vectNormal = vect1 * vect2;
+                vectNormal = new Vector(camera.toCameraView(new Point(vectNormal.X, vectNormal.Y, vectNormal.Z))).normalize();
 
-                double x = vectNormal.X, y = vectNormal.Y, z = vectNormal.Z;
-                double normalization = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
-                x = x / normalization;
-                y = y / normalization;
-                z = z / normalization;
-                if (x < 1 && y < 1 && z < 1)
-                {
-                    if (y == Math.Max(x, y))
-                    {
-                        if (y == Math.Max(z, y))
-                            y = 1;
-                        else
-                            z = 1;
-                    }
-                    else if (x == Math.Max(x, z))
-                        x = 1;
-                    else
-                        z = 1;
-                }
-                vectNormal.X = x;
-                vectNormal.Y = y;
-                vectNormal.Z = z;
+
+
+                /*         double x = vectNormal.X, y = vectNormal.Y, z = vectNormal.Z;
+                         double normalization = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2) + Math.Pow(z, 2));
+                         x = x / normalization;
+                         y = y / normalization;
+                         z = z / normalization;
+                         if (x < 1 && y < 1 && z < 1)
+                         {
+                             if (y == Math.Max(x, y))
+                             {
+                                 if (y == Math.Max(z, y))
+                                     y = 1;
+                                 else
+                                     z = 1;
+                             }
+                             else if (x == Math.Max(x, z))
+                                 x = 1;
+                             else
+                                 z = 1;
+                         }
+                         vectNormal.X = x;
+                         vectNormal.Y = y;
+                         vectNormal.Z = z;*/
 
                 double vectScalar = vectNormal.X * vectProec.X + vectNormal.Y * vectProec.Y + vectNormal.Z * vectProec.Z; // скалярное произведение
 
