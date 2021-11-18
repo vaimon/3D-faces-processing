@@ -16,7 +16,7 @@ namespace _3DFacesProcessing
         /// <param name="x1">Стартовая точка</param>
         /// <param name="y1">Стартовая точка</param>
         /// <param name="x2">Конечная точка</param>
-        /// <param name="y2">Конечная линии</param>
+        /// <param name="y2">Конечная точка</param>
         public static List<int> interpolate(int x1, int y1, int x2, int y2)
         {
             List<int> res = new List<int>();
