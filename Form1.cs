@@ -15,8 +15,11 @@ namespace _3DFacesProcessing
         BindingList<Shape> sceneShapes;
         List<Shape> scene;
         bool isMoving = false;
+        bool pruneNonFacial = false;
         Camera camera;
         List<Color> colorrange;
+        Shape shapeWithoutNonFacial; // фигура без нелицевых граней
+        bool isPruningFaces = false;
 
         public Form1()
         {
@@ -132,8 +135,15 @@ namespace _3DFacesProcessing
                 case 'j': camera.changeView(shiftX: -2); break;
                 case 'k': camera.changeView(shiftY: -2); break;
                 case 'l': camera.changeView(shiftX: 2); break;
+                default: return;
             }
-            redrawScene();
+            if (isPruningFaces)
+            {
+                shapeWithoutNonFacial = findNonFacial(sceneShapes[listBox.SelectedIndex], camera);
+                redrawShapeWithoutNonFacial();
+            }
+            else
+                redrawScene();
             //label7.Text = $"{camera.Location}";
             e.Handled = true;
         }
@@ -156,6 +166,14 @@ namespace _3DFacesProcessing
             Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,l, camera, colorrange) ;
              canvas.Image = bmp;
             canvas.Invalidate();
+        private void checkBoxPruneNonFacial_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxPruneNonFacial.Checked == true)
+                isPruningFaces = true;
+            else
+                isPruningFaces = false;
+            shapeWithoutNonFacial = findNonFacial(sceneShapes[listBox.SelectedIndex], camera);
+            redrawShapeWithoutNonFacial();
         }
     }
 }

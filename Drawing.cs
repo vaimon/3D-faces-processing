@@ -46,6 +46,9 @@ namespace _3DFacesProcessing
             {
                 drawLine(line, pen);
             }
+            var norm = face.NormVector;
+            drawLine(new Line(face.getCenter(), new Point((int)(face.getCenter().Xf + norm.x * 50), (int)(face.getCenter().Yf + norm.y * 50), (int)(face.getCenter().Zf + norm.z * 50))), new Pen(Color.GreenYellow));
+
         }
 
         /// <summary>
@@ -118,12 +121,12 @@ namespace _3DFacesProcessing
             drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraUp.x * 50, camera.cameraPosition.Yf + camera.cameraUp.y * 50, camera.cameraPosition.Zf + camera.cameraUp.z * 50)), new Pen(Color.Violet));
             //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
             fbitmap.Dispose();
-            canvas.Image = bitmap;         
+            canvas.Image = bitmap;
         }
         /// <summary>
         /// Генерирует множество цветов
         /// </summary>
-      
+
         List<Color> GenerateColors()
         {
             List<Color> res = new List<Color>();
@@ -133,6 +136,29 @@ namespace _3DFacesProcessing
                res.Add(Color.FromArgb(r.Next(0, 255), r.Next(0, 100), r.Next(60, 255)));
             return res;
         }
+
+        /// <summary>
+        /// Перерисовывает фигуру без нелицевых граней
+        /// </summary>
+        void redrawShapeWithoutNonFacial()
+        {
+            var bitmap = new Bitmap(canvas.Width, canvas.Height);
+            fbitmap = new FastBitmap(bitmap);
+            if (isAxisVisible)
+            {
+                drawAxis();
+            }
+
+            drawShape(shapeWithoutNonFacial, highlightPen);
+
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraDirection.x * 50, camera.cameraPosition.Yf + camera.cameraDirection.y * 50, camera.cameraPosition.Zf + camera.cameraDirection.z * 50)), new Pen(Color.CadetBlue));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraRight.x * 50, camera.cameraPosition.Yf + camera.cameraRight.y * 50, camera.cameraPosition.Zf + camera.cameraRight.z * 50)), new Pen(Color.DarkOrange));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraUp.x * 50, camera.cameraPosition.Yf + camera.cameraUp.y * 50, camera.cameraPosition.Zf + camera.cameraUp.z * 50)), new Pen(Color.Violet));
+
+            //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
+            fbitmap.Dispose();
+            canvas.Image = bitmap;
+        }
+
     }
 }
-

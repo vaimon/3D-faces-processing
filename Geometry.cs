@@ -20,7 +20,7 @@ namespace _3DFacesProcessing
         {
             this.x = x;
             this.y = y;
-           
+
         }
     }
     /// <summary>
@@ -121,7 +121,7 @@ namespace _3DFacesProcessing
         public Tuple<PointF?,double> to2D(Camera cam)
         {
             var viewCoord = cam.toCameraView(this);
-        
+
             if (projection == ProjectionType.PARALLEL) {
                 if (viewCoord.Zf > 0)
                 {
@@ -167,7 +167,7 @@ namespace _3DFacesProcessing
             return $"({X}, {Y}, {Z})";
         }
     }
-   
+
         /// <summary>
         /// Отрезок в пространстве
         /// </summary>
@@ -200,14 +200,14 @@ namespace _3DFacesProcessing
     public class Face
     {
         List<Line> edges;
-        Point normVector;
+        Vector normVector;
         List<Point> verticles;
 
         public Face()
         {
             edges = new List<Line>();
             verticles = new List<Point>();
-            normVector = new Point(0,0,0);
+            normVector = new Vector(0, 0, 0);
         }
 
         public Face(IEnumerable<Line> edges) : this()
@@ -241,11 +241,14 @@ namespace _3DFacesProcessing
         public List<Point> Verticles { get => verticles; }
         void recalculateNormVector()
         {
-            Point a = edges.First().getVectorCoordinates(), b = edges.Last().getReverseVectorCoordinates();
-            normVector = new Point(a.Yf * b.Zf - a.Zf * b.Yf, a.Xf * b.Zf - a.Zf * b.Xf, a.Xf * b.Yf - a.Yf * b.Xf);
+
         }
 
-        public Point NormVector { get => normVector; }
+        public Vector NormVector { get {
+                Vector a = new Vector(edges.First().getVectorCoordinates()), b = new Vector(edges.Last().getReverseVectorCoordinates());
+                normVector = (b * a).normalize();
+                return normVector;
+            } }
 
         public List<Line> Edges { get => edges; }
 
@@ -454,7 +457,7 @@ namespace _3DFacesProcessing
             return $"{getShapeName()} ({faces.Count})";
         }
     }
-   
+
     class Tetrahedron : Shape
     {
         public override String getShapeName()
@@ -713,11 +716,10 @@ namespace _3DFacesProcessing
             Point c = new Point(200, 0, 200);
             Point f = new Point(200, 200, 0);
             Point h = new Point(0, 200, 200);
-            res.addVerticles(new List<Point> { a, c, f, h });
-            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, c)).addEdge(new Line(c, a)).addVerticles(new List<Point> { a, f, c }));
-            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f)).addVerticles(new List<Point> { f, c,h }));
-            res.addFace(new Face().addEdge(new Line(c, h)).addEdge(new Line(h, a)).addEdge(new Line(a, c)).addVerticles(new List<Point> { c,h,a }));
-            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f)).addVerticles(new List<Point> { f,h,a }));
+            res.addFace(new Face().addEdge(new Line(a, c)).addEdge(new Line(c, f)).addEdge(new Line(f, a))); //
+            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f))); // ok
+            res.addFace(new Face().addEdge(new Line(a, h)).addEdge(new Line(h, c)).addEdge(new Line(c, a))); // ok
+            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f))); // ok
             return res;
         }
 
@@ -768,13 +770,12 @@ namespace _3DFacesProcessing
             Point f = new Point(200, 200, 0);
             Point g = new Point(200, 200, 200);
             Point h = new Point(0, 200, 200);
-            res.addVerticles(new List<Point> { a,b, c,d,e, f,g, h });
-            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, c)).addEdge(new Line(c, d)).addEdge(new Line(d, a)).addVerticles(new List<Point> { a, b, c ,d}));
-            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)).addVerticles(new List<Point> { b,c,g,f }));
-            res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)).addVerticles(new List<Point> { g,h,e,f }));
-            res.addFace(new Face().addEdge(new Line(h, e)).addEdge(new Line(e, a)).addEdge(new Line(a, d)).addEdge(new Line(d, h)).addVerticles(new List<Point> { e,a,d,h }));
-            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a)).addVerticles(new List<Point> { b, f, e,a }));
-            res.addFace(new Face().addEdge(new Line(d, c)).addEdge(new Line(c, g)).addEdge(new Line(g, h)).addEdge(new Line(h, d)).addVerticles(new List<Point> { d,c,g,h }));
+            res.addFace(new Face().addEdge(new Line(a, d)).addEdge(new Line(d, c)).addEdge(new Line(c, b)).addEdge(new Line(b, a)));
+            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)));
+            res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)));
+            res.addFace(new Face().addEdge(new Line(h, d)).addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, h)));
+            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a)));
+            res.addFace(new Face().addEdge(new Line(d, h)).addEdge(new Line(h, g)).addEdge(new Line(g, c)).addEdge(new Line(c, d)));
             return res;
         }
 
@@ -958,6 +959,10 @@ namespace _3DFacesProcessing
             z = z / normalization;
             return this;
         }
+
+        public double X { get => x; set => x = value; }
+        public double Y { get => y; set => y = value; }
+        public double Z { get => z; set => z = value; }
 
         public static Vector operator -(Vector v1, Vector v2)
         {
