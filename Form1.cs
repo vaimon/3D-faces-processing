@@ -132,6 +132,7 @@ namespace _3DFacesProcessing
                 case 'j': camera.changeView(shiftX: -2); break;
                 case 'k': camera.changeView(shiftY: -2); break;
                 case 'l': camera.changeView(shiftX: 2); break;
+                default: return;
             }
             redrawScene();
             //label7.Text = $"{camera.Location}";
