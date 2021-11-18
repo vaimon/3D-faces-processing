@@ -13,6 +13,16 @@ namespace _3DFacesProcessing
     /// Тип проекции на экран
     /// </summary>
     public enum ProjectionType { ISOMETRIC, PERSPECTIVE, TRIMETRIC, DIMETRIC, PARALLEL }
+    public class Point2d
+    {
+        double x, y;
+        public Point2d(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+
+        }
+    }
     /// <summary>
     /// Точка в пространстве
     /// </summary>
@@ -35,7 +45,18 @@ namespace _3DFacesProcessing
             this.y = y;
             this.z = z;
         }
-
+        public override bool Equals(object obj)
+        {
+            if (obj == null) return false;
+            Point objAsPart = obj as Point;
+            if (objAsPart == null) return false;
+            else return Equals(objAsPart);
+        }
+        public bool Equals(Point other)
+        {
+            if (other == null) return false;
+            return (this.X.Equals(other.X)&& this.Y.Equals(other.Y)&& this.Z.Equals(other.Z));
+        }
         public static void setProjection(Size screenSize, double zScreenNear, double zScreenFar, double fov)
         {
             Point.screenSize = screenSize;
@@ -97,14 +118,14 @@ namespace _3DFacesProcessing
             }
         }
 
-        public PointF? to2D(Camera cam)
+        public Tuple<PointF?,double> to2D(Camera cam)
         {
             var viewCoord = cam.toCameraView(this);
 
             if (projection == ProjectionType.PARALLEL) {
-                if (viewCoord.Z > 0)
+                if (viewCoord.Zf > 0)
                 {
-                    return new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf);
+                    return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)viewCoord.Xf, worldCenter.Y + (float)viewCoord.Yf), (float)this.Zf);
                 }
                 return null;
             }
@@ -112,7 +133,7 @@ namespace _3DFacesProcessing
             {
                 if(viewCoord.Zf < 0)
                 {
-                    return null;
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                 }
                 //var eyeDistance = 200;
                 //Matrix res = new Matrix(1, 4).fill(viewCoord.Xf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Yf * eyeDistance / (viewCoord.Zf + eyeDistance), viewCoord.Zf, 1);
@@ -120,7 +141,7 @@ namespace _3DFacesProcessing
                 Matrix res = new Matrix(1, 4).fill(viewCoord.Xf, viewCoord.Yf, viewCoord.Zf, 1) * perspectiveProjectionMatrix;
                 if(res[0,3] == 0)
                 {
-                    return null;
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                     //return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
                 }
                 res *= 1.0 / res[0, 3];
@@ -129,12 +150,12 @@ namespace _3DFacesProcessing
                 //res[0, 2] = Math.Clamp(res[0, 2], -1, 1);
                 if(res[0,2] < 0)
                 {
-                    return null;
+                    return Tuple.Create<PointF?, double>(null, (float)this.Zf);
                 }
-                return new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y);
+                return Tuple.Create<PointF?, double>(new PointF(worldCenter.X + (float)res[0, 0] * worldCenter.X, worldCenter.Y + (float)res[0, 1] * worldCenter.Y), (float)this.Zf);
             } else
             {
-                return to2D();
+                return Tuple.Create<PointF?,double>(to2D(), (float)this.Zf);
             }
             //else
             //{
@@ -146,10 +167,11 @@ namespace _3DFacesProcessing
             return $"({X}, {Y}, {Z})";
         }
     }
-    /// <summary>
-    /// Отрезок в пространстве
-    /// </summary>
-    public class Line
+
+        /// <summary>
+        /// Отрезок в пространстве
+        /// </summary>
+        public class Line
     {
         public Point start,end;
 
@@ -178,12 +200,14 @@ namespace _3DFacesProcessing
     public class Face
     {
         List<Line> edges;
-        Point normVector;
+        Vector normVector;
+        public List<Point> verticles;
 
         public Face()
         {
             edges = new List<Line>();
-            normVector = new Point(0,0,0);
+            verticles = new List<Point>();
+            normVector = new Vector(0, 0, 0);
         }
 
         public Face(IEnumerable<Line> edges) : this()
@@ -203,14 +227,28 @@ namespace _3DFacesProcessing
             recalculateNormVector();
             return this;
         }
-
-        void recalculateNormVector()
+        public Face addVerticle(Point p)
         {
-            Point a = edges.First().getVectorCoordinates(), b = edges.Last().getReverseVectorCoordinates();
-            normVector = new Point(a.Yf * b.Zf - a.Zf * b.Yf, a.Xf * b.Zf - a.Zf * b.Xf, a.Xf * b.Yf - a.Yf * b.Xf);
+            verticles.Add(p);
+            return this;
+        }
+        public Face addVerticles(IEnumerable<Point> points)
+        {
+            this.verticles.AddRange(points);
+            return this;
         }
 
-        public Point NormVector { get => normVector; }
+        public List<Point> Verticles { get => verticles; }
+        void recalculateNormVector()
+        {
+
+        }
+
+        public Vector NormVector { get {
+                Vector a = new Vector(edges.First().getVectorCoordinates()), b = new Vector(edges.Last().getReverseVectorCoordinates());
+                normVector = (b * a).normalize();
+                return normVector;
+            } }
 
         public List<Line> Edges { get => edges; }
 
@@ -237,10 +275,11 @@ namespace _3DFacesProcessing
     public class Shape
     {
         List<Face> faces;
-
+        List<Point> verticles;
         public Shape()
         {
             faces = new List<Face>();
+            verticles = new List<Point>();
         }
 
         public Shape(IEnumerable<Face> faces) : this()
@@ -260,20 +299,38 @@ namespace _3DFacesProcessing
         }
 
         public List<Face> Faces { get => faces; }
+        public Shape(IEnumerable<Point> verticles) : this()
+        {
+            this.verticles.AddRange(verticles);
+        }
+
+        public Shape addVerticle(Point verticle)
+        {
+            verticles.Add(verticle);
+            return this;
+        }
+        public Shape addVerticles(IEnumerable<Point> verticles)
+        {
+            this.verticles.AddRange(verticles);
+            return this;
+        }
+
+        public List<Point> Verticles { get => verticles; }
 
         /// <summary>
         /// Преобразует все точки в фигуре по заданной функции
         /// </summary>
         /// <param name="f">Функция, преобразующая точку фигуры</param>
-        public void transformPoints(ActionRef<Point> f)
+        public void transformPoints(Func<Point, Point> f)
         {
             foreach (var face in Faces)
             {
                 foreach (var line in face.Edges)
                 {
-                    f(ref line.start);
-                    f(ref line.end);
+                    line.start = f(line.start);
+                    line.end = f(line.end);
                 }
+                face.verticles = face.verticles.Select(x => f(x)).ToList();
             }
         }
 
@@ -301,6 +358,7 @@ namespace _3DFacesProcessing
             Shape res = new Shape();
             StreamReader sr = new StreamReader(fileName);
             List<Line> edgs = new List<Line>();
+            List<Point> verts=new List<Point>() ;
             // название фигуры
             string line = sr.ReadLine();
             if (line != null)
@@ -328,6 +386,9 @@ namespace _3DFacesProcessing
                     case "ROTATIONSHAPE":
                         res = new RotationShape();
                         break;
+                    case "OBJECT":
+                        res = new ObjectShape();
+                        break;
                     default:
                         throw new Exception("Такой фигуры нет :с");
                 }
@@ -352,15 +413,29 @@ namespace _3DFacesProcessing
                     var endPoint = str[1].Split(','); // конец ребра
                     // добавляем новое ребро текущей грани
                     edgs.Add(new Line(new Point(int.Parse(startPoint[0]), int.Parse(startPoint[1]), int.Parse(startPoint[2])), new Point(int.Parse(endPoint[0]), int.Parse(endPoint[1]), int.Parse(endPoint[2]))));
+                    verts.Add(new Point(int.Parse(startPoint[0]), int.Parse(startPoint[1]), int.Parse(startPoint[2])));
+                    verts.Add(new Point(int.Parse(endPoint[0]), int.Parse(endPoint[1]), int.Parse(endPoint[2])));
                 }
-                res.addFace(new Face(edgs)); // добавляем целую грань фигуры
+                List<Point> v= Distinct(verts);
+                res.addFace(new Face(edgs).addVerticles(v)); // добавляем целую грань фигуры
                 edgs = new List<Line>();
+                verts.Clear();
+                v.Clear();
                 line = sr.ReadLine();
             }
             sr.Close();
             return res;
         }
-
+        public static List<Point> Distinct<Point>(List<Point> l)
+        {
+            List<Point> uniq = new List<Point>();
+            foreach (Point p in l)
+            {
+                if (!uniq.Contains(p))
+                    uniq.Add(p);
+            }
+            return uniq;
+        }
         // сохраняет модель многогранника в файл
         public void saveShape(string fileName)
         {
@@ -411,6 +486,14 @@ namespace _3DFacesProcessing
         }
     }
 
+    class ObjectShape : Shape
+    {
+        public override String getShapeName()
+        {
+            return "OBJECT";
+        }
+    }
+
     class Icosahedron : Shape
     {
         public override String getShapeName()
@@ -436,7 +519,8 @@ namespace _3DFacesProcessing
         Line axiz;
         int Divisions;
         List<Point> allpoints;
-        List<Line> edges;//ребра
+        List<Line> edges;
+        List<Line> edges1=new List<Line>();//ребра
         public RotationShape()
         {
             allpoints = new List<Point>();
@@ -644,10 +728,10 @@ namespace _3DFacesProcessing
             Point c = new Point(200, 0, 200);
             Point f = new Point(200, 200, 0);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, c)).addEdge(new Line(c, a)));
-            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f)));
-            res.addFace(new Face().addEdge(new Line(c, h)).addEdge(new Line(h, a)).addEdge(new Line(a, c)));
-            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f)));
+            res.addFace(new Face().addEdge(new Line(a, c)).addEdge(new Line(c, f)).addEdge(new Line(f, a))); // ok
+            res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f))); // ok
+            res.addFace(new Face().addEdge(new Line(a, h)).addEdge(new Line(h, c)).addEdge(new Line(c, a))); // ok
+            res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f))); // ok
             return res;
         }
 
@@ -671,15 +755,15 @@ namespace _3DFacesProcessing
             Point d = cube.Faces[3].getCenter();
             Point e = cube.Faces[4].getCenter();
             Point f = cube.Faces[5].getCenter();
-
-            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, b)).addEdge(new Line(b, a)));
-            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, f)).addEdge(new Line(f, b)));
-            res.addFace(new Face().addEdge(new Line(c, d)).addEdge(new Line(d, f)).addEdge(new Line(f, c)));
-            res.addFace(new Face().addEdge(new Line(d, a)).addEdge(new Line(a, f)).addEdge(new Line(f, d)));
-            res.addFace(new Face().addEdge(new Line(a, e)).addEdge(new Line(e, b)).addEdge(new Line(b, a)));
-            res.addFace(new Face().addEdge(new Line(b, e)).addEdge(new Line(e, c)).addEdge(new Line(c, b)));
-            res.addFace(new Face().addEdge(new Line(c, e)).addEdge(new Line(e, d)).addEdge(new Line(d, c)));
-            res.addFace(new Face().addEdge(new Line(d, e)).addEdge(new Line(e, a)).addEdge(new Line(a, d)));
+            res.addVerticles(new List<Point> { a,b, c, d,e,f });
+            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, b)).addEdge(new Line(b, a))); // ok
+            res.addFace(new Face().addEdge(new Line(b, f)).addEdge(new Line(f, c)).addEdge(new Line(c, b))); // ok
+            res.addFace(new Face().addEdge(new Line(c, f)).addEdge(new Line(f, d)).addEdge(new Line(d, c))); // ok
+            res.addFace(new Face().addEdge(new Line(d, f)).addEdge(new Line(f, a)).addEdge(new Line(a, d))); // ok
+            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, e)).addEdge(new Line(e, a))); // ok
+            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, e)).addEdge(new Line(e, b))); // ok
+            res.addFace(new Face().addEdge(new Line(c, d)).addEdge(new Line(d, e)).addEdge(new Line(e, c))); // ok
+            res.addFace(new Face().addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, d))); // ok
             return res;
         }
 
@@ -698,12 +782,12 @@ namespace _3DFacesProcessing
             Point f = new Point(200, 200, 0);
             Point g = new Point(200, 200, 200);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, c)).addEdge(new Line(c, d)).addEdge(new Line(d, a)));
+            res.addFace(new Face().addEdge(new Line(a, d)).addEdge(new Line(d, c)).addEdge(new Line(c, b)).addEdge(new Line(b, a)));
             res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)));
             res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)));
-            res.addFace(new Face().addEdge(new Line(h, e)).addEdge(new Line(e, a)).addEdge(new Line(a, d)).addEdge(new Line(d, h)));
+            res.addFace(new Face().addEdge(new Line(h, d)).addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, h)));
             res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a)));
-            res.addFace(new Face().addEdge(new Line(d, c)).addEdge(new Line(c, g)).addEdge(new Line(g, h)).addEdge(new Line(h, d)));
+            res.addFace(new Face().addEdge(new Line(d, h)).addEdge(new Line(h, g)).addEdge(new Line(g, c)).addEdge(new Line(c, d)));
             return res;
         }
 
@@ -729,19 +813,19 @@ namespace _3DFacesProcessing
             Point b = new Point(100, 250, 100);
             for(int i = 0; i < 10; i++)
             {
-                res.addFace(new Face().addEdge(new Line(circlePoints[i], circlePoints[(i + 1) % 10])).addEdge(new Line(circlePoints[(i + 1) % 10], circlePoints[(i + 2) % 10])).addEdge(new Line(circlePoints[(i+2) % 10], circlePoints[i])));
+                res.addFace(new Face().addEdge(new Line(circlePoints[i], circlePoints[(i + 1) % 10])).addEdge(new Line(circlePoints[(i + 1) % 10], circlePoints[(i + 2) % 10])).addEdge(new Line(circlePoints[(i+2) % 10], circlePoints[i])).addVerticles(new List<Point> { circlePoints[i], circlePoints[(i + 1) % 10], circlePoints[(i + 2) % 10] }));
             }
-            res.addFace(new Face().addEdge(new Line(circlePoints[1], a)).addEdge(new Line(a, circlePoints[3])).addEdge(new Line(circlePoints[3], circlePoints[1])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[3], a)).addEdge(new Line(a, circlePoints[5])).addEdge(new Line(circlePoints[5], circlePoints[3])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[5], a)).addEdge(new Line(a, circlePoints[7])).addEdge(new Line(circlePoints[7], circlePoints[5])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[7], a)).addEdge(new Line(a, circlePoints[9])).addEdge(new Line(circlePoints[9], circlePoints[7])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[9], a)).addEdge(new Line(a, circlePoints[1])).addEdge(new Line(circlePoints[1], circlePoints[9])));
+            res.addFace(new Face().addEdge(new Line(circlePoints[1], a)).addEdge(new Line(a, circlePoints[3])).addEdge(new Line(circlePoints[3], circlePoints[1])).addVerticles(new List<Point> { circlePoints[1], a, circlePoints[3] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[3], a)).addEdge(new Line(a, circlePoints[5])).addEdge(new Line(circlePoints[5], circlePoints[3])).addVerticles(new List<Point> { circlePoints[3], a, circlePoints[5] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[5], a)).addEdge(new Line(a, circlePoints[7])).addEdge(new Line(circlePoints[7], circlePoints[5])).addVerticles(new List<Point> { circlePoints[5], a , circlePoints[7] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[7], a)).addEdge(new Line(a, circlePoints[9])).addEdge(new Line(circlePoints[9], circlePoints[7])).addVerticles(new List<Point> {  circlePoints[7],a, circlePoints[9] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[9], a)).addEdge(new Line(a, circlePoints[1])).addEdge(new Line(circlePoints[1], circlePoints[9])).addVerticles(new List<Point> { circlePoints[9], a, circlePoints[1] }));
 
-            res.addFace(new Face().addEdge(new Line(circlePoints[0], b)).addEdge(new Line(b, circlePoints[2])).addEdge(new Line(circlePoints[2], circlePoints[0])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[2], b)).addEdge(new Line(b, circlePoints[4])).addEdge(new Line(circlePoints[4], circlePoints[2])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[4], b)).addEdge(new Line(b, circlePoints[6])).addEdge(new Line(circlePoints[6], circlePoints[4])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[6], b)).addEdge(new Line(b, circlePoints[8])).addEdge(new Line(circlePoints[8], circlePoints[6])));
-            res.addFace(new Face().addEdge(new Line(circlePoints[8], b)).addEdge(new Line(b, circlePoints[0])).addEdge(new Line(circlePoints[0], circlePoints[8])));
+            res.addFace(new Face().addEdge(new Line(circlePoints[0], b)).addEdge(new Line(b, circlePoints[2])).addEdge(new Line(circlePoints[2], circlePoints[0])).addVerticles(new List<Point> { circlePoints[0], b, circlePoints[2] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[2], b)).addEdge(new Line(b, circlePoints[4])).addEdge(new Line(circlePoints[4], circlePoints[2])).addVerticles(new List<Point> { circlePoints[2], b, circlePoints[4] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[4], b)).addEdge(new Line(b, circlePoints[6])).addEdge(new Line(circlePoints[6], circlePoints[4])).addVerticles(new List<Point> { circlePoints[4], b, circlePoints[6] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[6], b)).addEdge(new Line(b, circlePoints[8])).addEdge(new Line(circlePoints[8], circlePoints[6])).addVerticles(new List<Point> { circlePoints[6], b, circlePoints[8] }));
+            res.addFace(new Face().addEdge(new Line(circlePoints[8], b)).addEdge(new Line(b, circlePoints[0])).addEdge(new Line(circlePoints[0], circlePoints[8])).addVerticles(new List<Point> { circlePoints[8], b, circlePoints[0] }));
             return res;
         }
 
@@ -766,14 +850,14 @@ namespace _3DFacesProcessing
             {
                 if (i % 2 == 0)
                 {
-                    res.addFace(new Face().addEdge(new Line(centers[i], centers[(i + 1) % 10])).addEdge(new Line(centers[(i + 1) % 10], centers[(i + 2) % 10])).addEdge(new Line(centers[(i + 2) % 10], centers[15 + (i / 2 + 1) % 5])).addEdge(new Line(centers[15 + (i / 2 + 1) % 5], centers[15 + i / 2])).addEdge(new Line(centers[15 + i/ 2], centers[i])));
+                    res.addFace(new Face().addEdge(new Line(centers[i], centers[(i + 1) % 10])).addEdge(new Line(centers[(i + 1) % 10], centers[(i + 2) % 10])).addEdge(new Line(centers[(i + 2) % 10], centers[15 + (i / 2 + 1) % 5])).addEdge(new Line(centers[15 + (i / 2 + 1) % 5], centers[15 + i / 2])).addEdge(new Line(centers[15 + i/ 2], centers[i])).addVerticles(new List<Point> { centers[i], centers[(i + 1) % 10], centers[(i + 2) % 10], centers[15 + (i / 2 + 1) % 5], centers[15 + i / 2] }));
 
                     continue;
                 }
-                res.addFace(new Face().addEdge(new Line(centers[i], centers[(i + 1) % 10])).addEdge(new Line(centers[(i + 1) % 10], centers[(i + 2) % 10])).addEdge(new Line(centers[(i + 2) % 10], centers[10 + (i / 2 + 1) % 5])).addEdge(new Line(centers[10 + (i / 2 + 1) % 5], centers[10 + i / 2])).addEdge(new Line(centers[10 + i / 2], centers[i])));
+                res.addFace(new Face().addEdge(new Line(centers[i], centers[(i + 1) % 10])).addEdge(new Line(centers[(i + 1) % 10], centers[(i + 2) % 10])).addEdge(new Line(centers[(i + 2) % 10], centers[10 + (i / 2 + 1) % 5])).addEdge(new Line(centers[10 + (i / 2 + 1) % 5], centers[10 + i / 2])).addEdge(new Line(centers[10 + i / 2], centers[i]))).addVerticles(new List<Point> { centers[i], centers[(i + 1) % 10], centers[(i + 2) % 10], centers[10 + (i / 2 + 1) % 5], centers[10 + i / 2]});
             }
-            res.addFace(new Face().addEdge(new Line(centers[15], centers[16])).addEdge(new Line(centers[16], centers[17])).addEdge(new Line(centers[17], centers[18])).addEdge(new Line(centers[18], centers[19])).addEdge(new Line(centers[19], centers[15])));
-            res.addFace(new Face().addEdge(new Line(centers[10], centers[11])).addEdge(new Line(centers[11], centers[12])).addEdge(new Line(centers[12], centers[13])).addEdge(new Line(centers[13], centers[14])).addEdge(new Line(centers[14], centers[10])));
+            res.addFace(new Face().addEdge(new Line(centers[15], centers[16])).addEdge(new Line(centers[16], centers[17])).addEdge(new Line(centers[17], centers[18])).addEdge(new Line(centers[18], centers[19])).addEdge(new Line(centers[19], centers[15])).addVerticles(new List<Point> { centers[15], centers[16] , centers[17], centers[18] , centers[19]}));
+            res.addFace(new Face().addEdge(new Line(centers[10], centers[11])).addEdge(new Line(centers[11], centers[12])).addEdge(new Line(centers[12], centers[13])).addEdge(new Line(centers[13], centers[14])).addEdge(new Line(centers[14], centers[10])).addVerticles(new List<Point> { centers[10], centers[11], centers[12], centers[13], centers[14] }));
 
             return res;
         }
@@ -791,8 +875,10 @@ namespace _3DFacesProcessing
             //Line axis;
             int Count = divisions;
             double angle = (360.0 / Count);//угол
-            List<Line> edges;//ребра
-
+            List<Line> edges1=new List<Line>();//дно и верхушка
+            List<Line> edges2 = new List<Line>();//
+            List<Point> v = new List<Point>();
+            List<Point> v1 = new List<Point>();
             res.addPoints(genline);//добавили образующую
             for (int i = 1; i < divisions; i++)//количество разбиений
             {
@@ -822,15 +908,22 @@ namespace _3DFacesProcessing
                             res.addEdge(new Line(res.Points[index], res.Points[e]));
                             int e1 = (index + 1 + GeneralCount) % res.Points.Count;
                             //добавим грань
-                            res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])));
+                            //res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
+                            res.addFace(new Face().addEdge(new Line(res.Points[e], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[index])).addEdge(new Line(res.Points[index], res.Points[e])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
+                            edges1.Add(new Line(res.Points[index], res.Points[e1]));//res.Points[index], res.Points[e1])
+                            v.AddRange(new List<Point> { res.Points[index], res.Points[e1] });
+                            edges2.Add(new Line(res.Points[index + 1], res.Points[e]));//res.Points[index+1], res.Points[e]
+                            v1.AddRange(new List<Point> { res.Points[index+1], res.Points[e] });
                         }
+
                     }
 
                 }
 
 
             }
-
+            res.addFace(new Face().addEdges(edges1).addVerticles(v));
+            res.addFace(new Face().addEdges(edges2).addVerticles(v1));
             return res;
         }
 
@@ -879,6 +972,14 @@ namespace _3DFacesProcessing
             z = z / normalization;
             return this;
         }
+
+        public int X { get => (int)x; set => x = value; }
+        public int Y { get => (int)y; set => y = value; }
+        public int Z { get => (int)z; set => z = value; }
+
+        public double Xf { get => x; set => x = value; }
+        public double Yf { get => y; set => y = value; }
+        public double Zf { get => z; set => z = value; }
 
         public static Vector operator -(Vector v1, Vector v2)
         {

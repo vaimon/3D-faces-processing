@@ -15,7 +15,7 @@ namespace _3DFacesProcessing
         Pen blackPen = new Pen(Color.Black, 3);
         Pen highlightPen = new Pen(Color.DarkRed, 3);
         FastBitmap fbitmap;
-
+        List<Color> rangecolors;
         private void btnShowAxis_Click(object sender, EventArgs e)
         {
             isAxisVisible = !isAxisVisible;
@@ -46,6 +46,9 @@ namespace _3DFacesProcessing
             {
                 drawLine(line, pen);
             }
+            var norm = face.NormVector;
+            //drawLine(new Line(face.getCenter(), new Point((int)(face.getCenter().Xf + norm.x * 50), (int)(face.getCenter().Yf + norm.y * 50), (int)(face.getCenter().Zf + norm.z * 50))), new Pen(Color.GreenYellow));
+
         }
 
         /// <summary>
@@ -66,8 +69,8 @@ namespace _3DFacesProcessing
             //    pf1 = line.Start.to2D();
             //    pf2 = line.End.to2D();
             //}
-            pf1 = line.Start.to2D(camera);
-            pf2 = line.End.to2D(camera);
+            pf1 = line.Start.to2D(camera).Item1;
+            pf2 = line.End.to2D(camera).Item1;
             if(pf1.HasValue && pf2.HasValue)
             {
                 drawVuLine(new System.Drawing.Point((int)pf1.Value.X, (int)(pf1.Value.Y)), new System.Drawing.Point((int)pf2.Value.X, (int)(pf2.Value.Y)), pen.Color);
@@ -118,8 +121,44 @@ namespace _3DFacesProcessing
             drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraUp.x * 50, camera.cameraPosition.Yf + camera.cameraUp.y * 50, camera.cameraPosition.Zf + camera.cameraUp.z * 50)), new Pen(Color.Violet));
             //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
             fbitmap.Dispose();
-            canvas.Image = bitmap;         
+            canvas.Image = bitmap;
         }
+        /// <summary>
+        /// Генерирует множество цветов
+        /// </summary>
+
+        List<Color> GenerateColors()
+        {
+            List<Color> res = new List<Color>();
+           Random r;
+            r= new Random();//Environment.TickCount
+            for (int i = 0; i < 50; ++i)
+               res.Add(Color.FromArgb(r.Next(0, 255), r.Next(0, 100), r.Next(10, 255)));
+            return res;
+        }
+
+        /// <summary>
+        /// Перерисовывает фигуру без нелицевых граней
+        /// </summary>
+        void redrawShapeWithoutNonFacial()
+        {
+            var bitmap = new Bitmap(canvas.Width, canvas.Height);
+            fbitmap = new FastBitmap(bitmap);
+            if (isAxisVisible)
+            {
+                drawAxis();
+            }
+
+            drawShape(shapeWithoutNonFacial, highlightPen);
+
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraDirection.x * 50, camera.cameraPosition.Yf + camera.cameraDirection.y * 50, camera.cameraPosition.Zf + camera.cameraDirection.z * 50)), new Pen(Color.CadetBlue));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraRight.x * 50, camera.cameraPosition.Yf + camera.cameraRight.y * 50, camera.cameraPosition.Zf + camera.cameraRight.z * 50)), new Pen(Color.DarkOrange));
+            drawLine(new Line(camera.cameraPosition, new Point(camera.cameraPosition.Xf + camera.cameraUp.x * 50, camera.cameraPosition.Yf + camera.cameraUp.y * 50, camera.cameraPosition.Zf + camera.cameraUp.z * 50)), new Pen(Color.Violet));
+
+            //label6.Text = camera.toCameraView(camera.cameraPosition).ToString();
+            fbitmap.Dispose();
+            canvas.Image = bitmap;
+        }
+
     }
 }
-

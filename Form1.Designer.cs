@@ -1,5 +1,4 @@
-﻿
-namespace _3DFacesProcessing
+﻿namespace _3DFacesProcessing
 {
     partial class Form1
     {
@@ -46,18 +45,12 @@ namespace _3DFacesProcessing
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.rbPerspective = new System.Windows.Forms.RadioButton();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.z_buffer = new System.Windows.Forms.Button();
+            this.checkBoxPruneNonFacial = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.canvas)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             this.SuspendLayout();
             // 
             // btnEditor
@@ -259,55 +252,6 @@ namespace _3DFacesProcessing
             this.rbPerspective.Text = "Перспективная проекция";
             this.rbPerspective.UseVisualStyleBackColor = false;
             // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::_3DFacesProcessing.Properties.Resources._1000_F_106142795_ne3izxiVn0Y43MEeQRJ01mxx0Eb1ymgc;
-            this.pictureBox2.Location = new System.Drawing.Point(118, 33);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(219, 127);
-            this.pictureBox2.TabIndex = 31;
-            this.pictureBox2.TabStop = false;
-            // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.White;
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.pictureBox3);
-            this.panel1.Controls.Add(this.pictureBox2);
-            this.panel1.Location = new System.Drawing.Point(0, 781);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(335, 163);
-            this.panel1.TabIndex = 32;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(21, 8);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(66, 25);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "Обзор";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(139, 8);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(176, 25);
-            this.label3.TabIndex = 33;
-            this.label3.Text = "Положение камеры";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.BackgroundImage = global::_3DFacesProcessing.Properties.Resources._4056768;
-            this.pictureBox3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.pictureBox3.Location = new System.Drawing.Point(15, 62);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(79, 69);
-            this.pictureBox3.TabIndex = 32;
-            this.pictureBox3.TabStop = false;
-            // 
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
@@ -322,12 +266,34 @@ namespace _3DFacesProcessing
             this.radioButton1.UseVisualStyleBackColor = false;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.rbParallel_CheckedChanged);
             // 
+            // z_buffer
+            // 
+            this.z_buffer.Location = new System.Drawing.Point(43, 701);
+            this.z_buffer.Name = "z_buffer";
+            this.z_buffer.Size = new System.Drawing.Size(236, 49);
+            this.z_buffer.TabIndex = 31;
+            this.z_buffer.Text = "Удалить невидимые";
+            this.z_buffer.UseVisualStyleBackColor = true;
+            this.z_buffer.Click += new System.EventHandler(this.z_buffer_Click);
+            // 
+            // checkBoxPruneNonFacial
+            // 
+            this.checkBoxPruneNonFacial.AutoSize = true;
+            this.checkBoxPruneNonFacial.Location = new System.Drawing.Point(65, 756);
+            this.checkBoxPruneNonFacial.Name = "checkBoxPruneNonFacial";
+            this.checkBoxPruneNonFacial.Size = new System.Drawing.Size(190, 29);
+            this.checkBoxPruneNonFacial.TabIndex = 32;
+            this.checkBoxPruneNonFacial.Text = "Отсечь нелицевые";
+            this.checkBoxPruneNonFacial.UseVisualStyleBackColor = true;
+            this.checkBoxPruneNonFacial.CheckedChanged += new System.EventHandler(this.checkBoxPruneNonFacial_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1678, 944);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.checkBoxPruneNonFacial);
+            this.Controls.Add(this.z_buffer);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.rbPerspective);
             this.Controls.Add(this.groupBox1);
@@ -343,10 +309,6 @@ namespace _3DFacesProcessing
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,12 +333,8 @@ namespace _3DFacesProcessing
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.RadioButton rbPerspective;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.PictureBox pictureBox3;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.Button z_buffer;
+        private System.Windows.Forms.CheckBox checkBoxPruneNonFacial;
     }
 }
-

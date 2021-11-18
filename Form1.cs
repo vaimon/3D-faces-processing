@@ -13,11 +13,19 @@ namespace _3DFacesProcessing
     public partial class Form1 : Form
     {
         BindingList<Shape> sceneShapes;
+        List<Shape> scene;
         bool isMoving = false;
+        bool pruneNonFacial = false;
         Camera camera;
+        List<Color> colorrange;
+        Shape shapeWithoutNonFacial; // фигура без нелицевых граней
+        bool isPruningFaces = false;
+
         public Form1()
         {
             sceneShapes = new BindingList<Shape>();
+            colorrange = GenerateColors();
+            scene = new List<Shape>();
             InitializeComponent();
             listBox.DataSource = sceneShapes;
             canvas.Image = new Bitmap(canvas.Width, canvas.Height);
@@ -25,7 +33,7 @@ namespace _3DFacesProcessing
             // А здесь задаём точку начала координат
             Point.worldCenter = new PointF(canvas.Width / 2, canvas.Height / 2);
             Point.projection = ProjectionType.PERSPECTIVE;
-            Point.setProjection(canvas.Size, 1, 100, 90);
+            Point.setProjection(canvas.Size, 1, 100, 45);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,7 +47,9 @@ namespace _3DFacesProcessing
         {
             if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                sceneShapes.Add(Shape.readShape(openFileDialog1.FileName));
+                Shape s = Shape.readShape(openFileDialog1.FileName);
+                sceneShapes.Add(s);
+                scene.Add(s);
                 changeToolsAccessibility(true);
                 redrawScene();
             }
@@ -116,19 +126,55 @@ namespace _3DFacesProcessing
             switch (e.KeyChar)
             {
                 case 'w': camera.move(forwardbackward: 5); break;
-                case 'a': camera.move(leftright: -5); break;
+                case 'a': camera.move(leftright: 5); break;
                 case 's': camera.move(forwardbackward: -5); break;
-                case 'd': camera.move(leftright: 5); break;
+                case 'd': camera.move(leftright: -5); break;
                 case 'q': camera.move(updown: 5); break;
                 case 'e': camera.move(updown: -5); break;
                 case 'i': camera.changeView(shiftY: 2); break;
                 case 'j': camera.changeView(shiftX: -2); break;
                 case 'k': camera.changeView(shiftY: -2); break;
                 case 'l': camera.changeView(shiftX: 2); break;
+                default: return;
             }
-            redrawScene();
+            if (isPruningFaces)
+            {
+                shapeWithoutNonFacial = findNonFacial(sceneShapes[listBox.SelectedIndex], camera);
+                redrawShapeWithoutNonFacial();
+            }
+            else
+                redrawScene();
             //label7.Text = $"{camera.Location}";
             e.Handled = true;
+        }
+
+        private void z_buffer_Click(object sender, EventArgs e)
+        {
+            // colorrange = GenerateColors();
+            // Shape s = Z_buffer.ToCamera(scene[0], camera);
+            // sceneShapes.RemoveAt(0);
+            //sceneShapes.Add(s);
+            // redrawScene();
+            //
+            //List<Shape> vspom=new List<Shape>{ s};
+            // drawShape(s, highlightPen);
+            List<Shape> l = sceneShapes.ToList();
+            //canvas.Image = new Bitmap(canvas.Width, canvas.Height);
+            // sceneShapes.Clear();
+            // sceneShapes.Add(l[0]);
+            // redrawScene();
+            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height, l, camera, colorrange);
+            canvas.Image = bmp;
+            canvas.Invalidate();
+        }
+        private void checkBoxPruneNonFacial_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxPruneNonFacial.Checked == true)
+                isPruningFaces = true;
+            else
+                isPruningFaces = false;
+            shapeWithoutNonFacial = findNonFacial(sceneShapes[listBox.SelectedIndex], camera);
+            redrawShapeWithoutNonFacial();
         }
     }
 }
