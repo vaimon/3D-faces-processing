@@ -201,7 +201,7 @@ namespace _3DFacesProcessing
     {
         List<Line> edges;
         Vector normVector;
-        List<Point> verticles;
+        public List<Point> verticles;
 
         public Face()
         {
@@ -321,15 +321,16 @@ namespace _3DFacesProcessing
         /// Преобразует все точки в фигуре по заданной функции
         /// </summary>
         /// <param name="f">Функция, преобразующая точку фигуры</param>
-        public void transformPoints(ActionRef<Point> f)
+        public void transformPoints(Func<Point, Point> f)
         {
             foreach (var face in Faces)
             {
                 foreach (var line in face.Edges)
                 {
-                    f(ref line.start);
-                    f(ref line.end);
+                    line.start = f(line.start);
+                    line.end = f(line.end);
                 }
+                face.verticles = face.verticles.Select(x => f(x)).ToList();
             }
         }
 

@@ -29,20 +29,20 @@ namespace _3DFacesProcessing
         public static void shift(ref Shape shape, double dx, double dy, double dz)
         {
             Matrix shift = new Matrix(4, 4).fill(1, 0, 0, dx, 0, 1, 0, dy, 0, 0, 1, dz, 0, 0, 0, 1);
-            shape.transformPoints((ref Point p) =>
+            shape.transformPoints((Point p) =>
             {
                 var res = shift * new Matrix(4, 1).fill(p.Xf, p.Yf, p.Zf, 1);
-                p = new Point(res[0, 0], res[1, 0], res[2, 0]);
+                return new Point(res[0, 0], res[1, 0], res[2, 0]);
             });
         }
 
         public static Shape shift(Shape shape, double dx, double dy, double dz)
         {
             Matrix shift = new Matrix(4, 4).fill(1, 0, 0, dx, 0, 1, 0, dy, 0, 0, 1, dz, 0, 0, 0, 1);
-            shape.transformPoints((ref Point p) =>
+            shape.transformPoints((Point p) =>
             {
                 var res = shift * new Matrix(4, 1).fill(p.Xf, p.Yf, p.Zf, 1);
-                p = new Point(res[0, 0], res[1, 0], res[2, 0]);
+                return new Point(res[0, 0], res[1, 0], res[2, 0]);
             });
             return shape;
         }
@@ -57,10 +57,10 @@ namespace _3DFacesProcessing
         public static void scale(ref Shape shape, double cx, double cy, double cz)
         {
             Matrix scale = new Matrix(4, 4).fill(cx, 0, 0, 0, 0, cy, 0, 0, 0, 0, cz, 0, 0, 0, 0, 1);
-            shape.transformPoints((ref Point p) =>
+            shape.transformPoints((Point p) =>
             {
                 var res = scale * new Matrix(4, 1).fill(p.Xf, p.Yf, p.Zf, 1);
-                p = new Point(res[0, 0], res[1, 0], res[2, 0]);
+                return new Point(res[0, 0], res[1, 0], res[2, 0]);
             });
         }
 
@@ -87,10 +87,10 @@ namespace _3DFacesProcessing
                     break;
             }
 
-            shape.transformPoints((ref Point p) =>
+            shape.transformPoints((Point p) =>
             {
                 var res = rotation * new Matrix(4, 1).fill(p.Xf, p.Yf, p.Zf, 1);
-                p = new Point(res[0, 0], res[1, 0], res[2, 0]);
+                return new Point(res[0, 0], res[1, 0], res[2, 0]);
             });
         }
 
