@@ -908,7 +908,8 @@ namespace _3DFacesProcessing
                             res.addEdge(new Line(res.Points[index], res.Points[e]));
                             int e1 = (index + 1 + GeneralCount) % res.Points.Count;
                             //добавим грань
-                            res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
+                            //res.addFace(new Face().addEdge(new Line(res.Points[index], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[e])).addEdge(new Line(res.Points[e], res.Points[index])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
+                            res.addFace(new Face().addEdge(new Line(res.Points[e], res.Points[e1])).addEdge(new Line(res.Points[e1], res.Points[index + 1])).addEdge(new Line(res.Points[index + 1], res.Points[index])).addEdge(new Line(res.Points[index], res.Points[e])).addVerticles(new List<Point> { res.Points[index], res.Points[index + 1], res.Points[e1], res.Points[e] }));
                             edges1.Add(new Line(res.Points[index], res.Points[e1]));//res.Points[index], res.Points[e1])
                             v.AddRange(new List<Point> { res.Points[index], res.Points[e1] });
                             edges2.Add(new Line(res.Points[index + 1], res.Points[e]));//res.Points[index+1], res.Points[e]
