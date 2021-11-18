@@ -220,7 +220,7 @@ namespace _3DFacesProcessing
                         return newShape;
 
             */
-            label3.Text = "";
+            //label3.Text = "";
             Shape newShape;
             switch (shape.getShapeName())
             {

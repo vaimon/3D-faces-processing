@@ -126,9 +126,9 @@ namespace _3DFacesProcessing
             switch (e.KeyChar)
             {
                 case 'w': camera.move(forwardbackward: 5); break;
-                case 'a': camera.move(leftright: -5); break;
+                case 'a': camera.move(leftright: 5); break;
                 case 's': camera.move(forwardbackward: -5); break;
-                case 'd': camera.move(leftright: 5); break;
+                case 'd': camera.move(leftright: -5); break;
                 case 'q': camera.move(updown: 5); break;
                 case 'e': camera.move(updown: -5); break;
                 case 'i': camera.changeView(shiftY: 2); break;
@@ -163,9 +163,10 @@ namespace _3DFacesProcessing
             // sceneShapes.Clear();
             // sceneShapes.Add(l[0]);
             // redrawScene();
-            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height,l, camera, colorrange) ;
-             canvas.Image = bmp;
+            Bitmap bmp = Z_buffer.z_buf(canvas.Width, canvas.Height, l, camera, colorrange);
+            canvas.Image = bmp;
             canvas.Invalidate();
+        }
         private void checkBoxPruneNonFacial_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxPruneNonFacial.Checked == true)
