@@ -647,7 +647,7 @@ namespace _3DFacesProcessing
             Point c = new Point(200, 0, 200);
             Point f = new Point(200, 200, 0);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, c)).addEdge(new Line(c, f)).addEdge(new Line(f, a))); // 
+            res.addFace(new Face().addEdge(new Line(a, c)).addEdge(new Line(c, f)).addEdge(new Line(f, a))); // ok
             res.addFace(new Face().addEdge(new Line(f, c)).addEdge(new Line(c, h)).addEdge(new Line(h, f))); // ok
             res.addFace(new Face().addEdge(new Line(a, h)).addEdge(new Line(h, c)).addEdge(new Line(c, a))); // ok
             res.addFace(new Face().addEdge(new Line(f, h)).addEdge(new Line(h, a)).addEdge(new Line(a, f))); // ok
@@ -675,14 +675,14 @@ namespace _3DFacesProcessing
             Point e = cube.Faces[4].getCenter();
             Point f = cube.Faces[5].getCenter();
 
-            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, b)).addEdge(new Line(b, a)));
-            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, f)).addEdge(new Line(f, b)));
-            res.addFace(new Face().addEdge(new Line(c, d)).addEdge(new Line(d, f)).addEdge(new Line(f, c)));
-            res.addFace(new Face().addEdge(new Line(d, a)).addEdge(new Line(a, f)).addEdge(new Line(f, d)));
-            res.addFace(new Face().addEdge(new Line(a, e)).addEdge(new Line(e, b)).addEdge(new Line(b, a)));
-            res.addFace(new Face().addEdge(new Line(b, e)).addEdge(new Line(e, c)).addEdge(new Line(c, b)));
-            res.addFace(new Face().addEdge(new Line(c, e)).addEdge(new Line(e, d)).addEdge(new Line(d, c)));
-            res.addFace(new Face().addEdge(new Line(d, e)).addEdge(new Line(e, a)).addEdge(new Line(a, d)));
+            res.addFace(new Face().addEdge(new Line(a, f)).addEdge(new Line(f, b)).addEdge(new Line(b, a))); // ok
+            res.addFace(new Face().addEdge(new Line(b, f)).addEdge(new Line(f, c)).addEdge(new Line(c, b))); // ok
+            res.addFace(new Face().addEdge(new Line(c, f)).addEdge(new Line(f, d)).addEdge(new Line(d, c))); // ok
+            res.addFace(new Face().addEdge(new Line(d, f)).addEdge(new Line(f, a)).addEdge(new Line(a, d))); // ok
+            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, e)).addEdge(new Line(e, a))); // ok
+            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, e)).addEdge(new Line(e, b))); // ok
+            res.addFace(new Face().addEdge(new Line(c, d)).addEdge(new Line(d, e)).addEdge(new Line(e, c))); // ok
+            res.addFace(new Face().addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, d))); // ok
             return res;
         }
 
@@ -701,12 +701,12 @@ namespace _3DFacesProcessing
             Point f = new Point(200, 200, 0);
             Point g = new Point(200, 200, 200);
             Point h = new Point(0, 200, 200);
-            res.addFace(new Face().addEdge(new Line(a, d)).addEdge(new Line(d, c)).addEdge(new Line(c, b)).addEdge(new Line(b, a)));
-            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b)));
-            res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f)));
-            res.addFace(new Face().addEdge(new Line(h, d)).addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, h)));
-            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a)));
-            res.addFace(new Face().addEdge(new Line(d, h)).addEdge(new Line(h, g)).addEdge(new Line(g, c)).addEdge(new Line(c, d)));
+            res.addFace(new Face().addEdge(new Line(a, d)).addEdge(new Line(d, c)).addEdge(new Line(c, b)).addEdge(new Line(b, a))); // ok
+            res.addFace(new Face().addEdge(new Line(b, c)).addEdge(new Line(c, g)).addEdge(new Line(g, f)).addEdge(new Line(f, b))); // ok
+            res.addFace(new Face().addEdge(new Line(f, g)).addEdge(new Line(g, h)).addEdge(new Line(h, e)).addEdge(new Line(e, f))); // ok
+            res.addFace(new Face().addEdge(new Line(h, d)).addEdge(new Line(d, a)).addEdge(new Line(a, e)).addEdge(new Line(e, h))); // ok
+            res.addFace(new Face().addEdge(new Line(a, b)).addEdge(new Line(b, f)).addEdge(new Line(f, e)).addEdge(new Line(e, a))); // ok
+            res.addFace(new Face().addEdge(new Line(d, h)).addEdge(new Line(h, g)).addEdge(new Line(g, c)).addEdge(new Line(c, d))); // ok
             return res;
         }
 
@@ -883,9 +883,13 @@ namespace _3DFacesProcessing
             return this;
         }
 
-        public double X { get => x; set => x = value; }
-        public double Y { get => y; set => y = value; }
-        public double Z { get => z; set => z = value; }
+        public int X { get => (int)x; set => x = value; }
+        public int Y { get => (int)y; set => y = value; }
+        public int Z { get => (int)z; set => z = value; }
+
+        public double Xf { get => x; set => x = value; }
+        public double Yf { get => y; set => y = value; }
+        public double Zf { get => z; set => z = value; }
 
         public static Vector operator -(Vector v1, Vector v2)
         {
