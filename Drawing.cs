@@ -47,7 +47,7 @@ namespace _3DFacesProcessing
                 drawLine(line, pen);
             }
             var norm = face.NormVector;
-            drawLine(new Line(face.getCenter(), new Point((int)(face.getCenter().Xf + norm.x * 50), (int)(face.getCenter().Yf + norm.y * 50), (int)(face.getCenter().Zf + norm.z * 50))), new Pen(Color.GreenYellow));
+            //drawLine(new Line(face.getCenter(), new Point((int)(face.getCenter().Xf + norm.x * 50), (int)(face.getCenter().Yf + norm.y * 50), (int)(face.getCenter().Zf + norm.z * 50))), new Pen(Color.GreenYellow));
 
         }
 
